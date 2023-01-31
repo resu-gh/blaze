@@ -1,0 +1,16 @@
+---
+Checks: 'clang-diagnostic-*,
+         clang-analyzer-*,
+         google-*,
+         bugprone-*,
+         llvm-*,
+         performance-*,
+         portability-*,
+         cppcoreguidelines-*'
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+AnalyzeTemporaryDtors: false
+FormatStyle: none
+User: resu
+...
+
