@@ -1,1 +1,3 @@
-entr.sh
+.cache
+build
+Makefile

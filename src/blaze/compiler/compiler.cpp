@@ -10,7 +10,7 @@ Compiler::Compiler(const std::string &s) {
     try {
         a = p.ParseRoot();
     } catch (Exception &px) {
-        throw &px;
+        throw px;
     }
     std::cout << a->String() << std::endl << std::endl;
     Evaluator e = Evaluator(r, std::cout);
@@ -18,9 +18,13 @@ Compiler::Compiler(const std::string &s) {
     try {
         o = e.Eval(*a);
     } catch (Exception &ax) {
-        throw &ax;
+        throw ax;
     }
-    std::cout << (o->Type() == OBJ::ObjectType::SEQUENCE ? "** " : " = ** ");
+    if (o->Type() == OBJ::ObjectType::SEQUENCE) {
+        std::cout << std::endl << "** ";
+    } else {
+        std::cout << " = ** ";
+    }
     std::cout << o->Inspect() << " **" << std::endl;
 }
 

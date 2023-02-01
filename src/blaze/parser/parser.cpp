@@ -107,9 +107,9 @@ std::unique_ptr<AST::Expr_> Parser::parseDice() {
     auto dicel = std::make_unique<AST::Dice>();
     dicel->Token = curToken;
     auto d = curToken.Literal.find_first_of('d');
-    std::string nDices = curToken.Literal.substr(0, d);
+    const std::string nDices = curToken.Literal.substr(0, d);
     if (nDices == "0") throw Exception("Declared 0 Dices %1%", curToken);
-    std::string nFaces = curToken.Literal.substr(d + 1, curToken.Literal.size());
+    const std::string nFaces = curToken.Literal.substr(d + 1, curToken.Literal.size());
     if (nFaces == "0") throw Exception("Declared 0 faces Dice %1%", curToken);
     dicel->nDices = nDices.empty() ? 1 : stoull(nDices);
     dicel->nFaces = stoull(nFaces);

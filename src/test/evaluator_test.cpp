@@ -31,7 +31,7 @@ TEST(EvaluatorT, expr) {
         Blaze::OBJ::ObjectType expectedType;
         std::string expectedValue;
     };
-    std::vector<Test> tests = {
+    const std::vector<Test> tests = {
         // clang-format off
         {"(10 * 2) + 10 / 2 - 5", Blaze::OBJ::ObjectType::INTEGER, "20"},
         {"33 + 67", Blaze::OBJ::ObjectType::INTEGER, "100"},
@@ -47,7 +47,7 @@ TEST(EvaluatorT, expr) {
         Blaze::Lexer lexer(test.input);
         Blaze::Parser parser(lexer);
         auto a = parser.ParseRoot();
-        int64_t seed = 1;
+        const int64_t seed = 1;
         Blaze::Rand::PRNG g(seed);
         std::stringstream s;
         Blaze::Evaluator e(g, s);
@@ -66,7 +66,7 @@ TEST(EvaluatorT, exprWithDice) {
         Blaze::OBJ::ObjectType expectedType;
         std::string expectedValue;
     };
-    std::vector<Test> tests = {
+    const std::vector<Test> tests = {
         // clang-format off
         {"d6", Blaze::OBJ::ObjectType::DICE, "1"},
         {"+10d6", Blaze::OBJ::ObjectType::INTEGER, "27"},
@@ -83,7 +83,7 @@ TEST(EvaluatorT, exprWithDice) {
         Blaze::Lexer lexer(test.input);
         Blaze::Parser parser(lexer);
         auto a = parser.ParseRoot();
-        int64_t seed = 1;
+        const int64_t seed = 1;
         Blaze::Rand::PRNG g(seed);
         std::stringstream s;
         Blaze::Evaluator e(g, s);
@@ -101,7 +101,7 @@ TEST(EvaluatorT, print) {
         std::string input;
         std::string expectedString;
     };
-    std::vector<Test> tests = {
+    const std::vector<Test> tests = {
         // clang-format off
         {"1", "1 = 1"},
         {"(1)", "(1) = 1"},
@@ -131,7 +131,7 @@ TEST(EvaluatorT, print) {
         Blaze::Lexer lexer(test.input);
         Blaze::Parser parser(lexer);
         auto a = parser.ParseRoot();
-        int64_t seed = 1;
+        const int64_t seed = 1;
         Blaze::Rand::PRNG g(seed);
         std::stringstream s;
         Blaze::Evaluator e(g, s);
@@ -139,7 +139,7 @@ TEST(EvaluatorT, print) {
         // test: OBJ::Object must be != nullptr
         ASSERT_NE(o, nullptr);
         // expectations
-        std::string r = s.str() + " = " + o->Inspect();
+        const std::string r = s.str() + " = " + o->Inspect();
         EXPECT_EQ(r, test.expectedString);
     }
 }

@@ -62,7 +62,7 @@ Token Lexer::make(TokenType t, const std::string &l) {
 }
 
 Token Lexer::makeDice() {
-    uint64_t pre = pos;
+    const uint64_t pre = pos;
     readChar(); // skip `d`
     if (!isDigit(curr)) return make(TokenType::ILLEGAL_, extractSubstr(pre, pos));
     while (isDigit(curr)) readChar();
@@ -70,7 +70,7 @@ Token Lexer::makeDice() {
 }
 
 Token Lexer::makeDiceOrNumber() {
-    uint64_t pre = pos;
+    const uint64_t pre = pos;
     while (isDigit(curr)) readChar();
     switch (curr) {
     case 'd':

@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 }
 
 TEST(LexerT, diagnostics) {
-    std::string input = "s";
+    const std::string input = "s";
     struct Test {
         Blaze::TokenType expectedType;
         std::string expectedLiteral;
@@ -38,7 +38,7 @@ TEST(LexerT, diagnostics) {
     };
     Blaze::Lexer lexer(input);
     for (auto &test : tests) {
-        Blaze::Token tok = lexer.NextToken();
+        const Blaze::Token tok = lexer.NextToken();
         // expectations
         EXPECT_EQ(tok.Type, test.expectedType);
         EXPECT_EQ(tok.Literal, test.expectedLiteral);
@@ -46,7 +46,7 @@ TEST(LexerT, diagnostics) {
 }
 
 TEST(LexerT, token) {
-    std::string input = "s + - * / 12 1.2 d10 10d10 ( ) ^";
+    const std::string input = "s + - * / 12 1.2 d10 10d10 ( ) ^";
     struct Test {
         Blaze::TokenType expectedType;
         std::string expectedLiteral;
@@ -70,7 +70,7 @@ TEST(LexerT, token) {
     };
     Blaze::Lexer lexer(input);
     for (auto &test : tests) {
-        Blaze::Token tok = lexer.NextToken();
+        const Blaze::Token tok = lexer.NextToken();
         // expectations
         EXPECT_EQ(tok.Type, test.expectedType);
         EXPECT_EQ(tok.Literal, test.expectedLiteral);
@@ -78,9 +78,9 @@ TEST(LexerT, token) {
 }
 
 TEST(LexerT, dice) {
-    std::string input = "d10 d100 d1d d308s dd10 73dd10 "
-                        "10d10 1.0d10 10d.200 10d1.4 "
-                        "408d1s 393d10d 1d1rand";
+    const std::string input = "d10 d100 d1d d308s dd10 73dd10 "
+                              "10d10 1.0d10 10d.200 10d1.4 "
+                              "408d1s 393d10d 1d1rand";
     struct Test {
         Blaze::TokenType expectedType;
         std::string expectedLiteral;
@@ -120,7 +120,7 @@ TEST(LexerT, dice) {
     // clang-format on
     Blaze::Lexer lexer(input);
     for (auto &test : tests) {
-        Blaze::Token tok = lexer.NextToken();
+        const Blaze::Token tok = lexer.NextToken();
         // expectations
         EXPECT_EQ(tok.Type, test.expectedType);
         EXPECT_EQ(tok.Literal, test.expectedLiteral);
@@ -128,7 +128,7 @@ TEST(LexerT, dice) {
 }
 
 TEST(LexerT, interger) {
-    std::string input = "1 10 100 100s 100d 3948d8293 -2930 -29.30";
+    const std::string input = "1 10 100 100s 100d 3948d8293 -2930 -29.30";
     struct Test {
         Blaze::TokenType expectedType;
         std::string expectedLiteral;
@@ -151,7 +151,7 @@ TEST(LexerT, interger) {
     };
     Blaze::Lexer lexer(input);
     for (auto &test : tests) {
-        Blaze::Token tok = lexer.NextToken();
+        const Blaze::Token tok = lexer.NextToken();
         // expectations
         EXPECT_EQ(tok.Type, test.expectedType);
         EXPECT_EQ(tok.Literal, test.expectedLiteral);
@@ -159,8 +159,8 @@ TEST(LexerT, interger) {
 }
 
 TEST(LexerT, float) {
-    std::string input = "1. .1 23.4 234 . 28.29389 2.3d "
-                        "408.2398d d2398.13 2398d.239 23d2.3";
+    const std::string input = "1. .1 23.4 234 . 28.29389 2.3d "
+                              "408.2398d d2398.13 2398d.239 23d2.3";
     struct Test {
         Blaze::TokenType expectedType;
         std::string expectedLiteral;
@@ -192,7 +192,7 @@ TEST(LexerT, float) {
     };
     Blaze::Lexer lexer(input);
     for (auto &test : tests) {
-        Blaze::Token tok = lexer.NextToken();
+        const Blaze::Token tok = lexer.NextToken();
         // expectations
         EXPECT_EQ(tok.Type, test.expectedType);
         EXPECT_EQ(tok.Literal, test.expectedLiteral);
@@ -200,9 +200,9 @@ TEST(LexerT, float) {
 }
 
 TEST(LexerT, scan) {
-    std::string input = "+ + d10 10d6 10d10d10\t\n"
-                        "d20 + 2d12 - 12\r "
-                        "3d20\t * 1.234     / (20\r )\n";
+    const std::string input = "+ + d10 10d6 10d10d10\t\n"
+                              "d20 + 2d12 - 12\r "
+                              "3d20\t * 1.234     / (20\r )\n";
     struct Test {
         Blaze::TokenType expectedType;
         std::string expectedLiteral;
@@ -232,7 +232,7 @@ TEST(LexerT, scan) {
     };
     Blaze::Lexer lexer(input);
     for (auto &test : tests) {
-        Blaze::Token tok = lexer.NextToken();
+        const Blaze::Token tok = lexer.NextToken();
         // expectations
         EXPECT_EQ(tok.Type, test.expectedType);
         EXPECT_EQ(tok.Literal, test.expectedLiteral);

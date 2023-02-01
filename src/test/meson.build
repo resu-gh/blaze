@@ -11,14 +11,14 @@ foreach d : lib_blaze_incd
 endforeach
 
 lexer_test = executable(
-  'lexer_test',
+  'blaze_lexer_test',
   sources : lexer_test_srcs,
   include_directories : lexer_test_incd,
   dependencies : deps,
   link_with : lib_blaze_shared,
   install : false)
 
-test ('lexer test', lexer_test)
+test ('blaze lexer test', lexer_test)
 
 parser_test_srcs = [
   'parser_test.cpp']
@@ -29,14 +29,14 @@ foreach d : lib_blaze_incd
 endforeach
 
 parser_test = executable(
-  'parser_test',
+  'blaze_parser_test',
   sources : parser_test_srcs,
   include_directories : parser_test_incd,
   dependencies : deps,
   link_with : lib_blaze_shared,
   install : false)
 
-test ('parser test', parser_test)
+test ('blaze parser test', parser_test)
 
 evaluator_test_srcs = [
   'evaluator_test.cpp']
@@ -47,11 +47,11 @@ foreach d : lib_blaze_incd
 endforeach
 
 evaluator_test = executable(
-  'evaluator_test',
+  'blaze_evaluator_test',
   sources : evaluator_test_srcs,
   include_directories : evaluator_test_incd,
   dependencies : deps,
   link_with : lib_blaze_shared,
   install : false)
 
-test ('evaluator test', evaluator_test)
+test ('blaze evaluator test', evaluator_test)

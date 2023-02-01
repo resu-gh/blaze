@@ -6,6 +6,7 @@ Checks: 'clang-diagnostic-*,
          llvm-*,
          performance-*,
          portability-*,
+         misc-*,
          cppcoreguidelines-*'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''

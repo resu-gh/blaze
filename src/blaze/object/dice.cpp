@@ -7,7 +7,7 @@ Dice::Dice(uint64_t nDices, Rand::Generator_ &g, uint64_t nFaces)
     : Value(0)
     , Values() {
     for (uint64_t i = 0; i < nDices; ++i) {
-        uint64_t v = g.Generate(nFaces);
+        const uint64_t v = g.Generate(nFaces);
         Value += v;
         Values.push_back(v);
     }
