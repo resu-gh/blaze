@@ -59,13 +59,10 @@ lib_blaze_shared = shared_library (
   dependencies : deps,
   install : true)
 
-fs = import ('fs')
-
-foreach h : lib_blaze_hdrs
-  install_headers (
-    h,
-    install_dir : lib_blaze_dir / fs.parent (h))
-endforeach
+install_headers (
+  lib_blaze_hdrs,
+  preserve_path : true,
+  subdir : lib_blaze_dir)
 
 pkg_mod = import ('pkgconfig')
 
