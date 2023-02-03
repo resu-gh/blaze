@@ -8,8 +8,8 @@ namespace blaze {
 class lexer final {
   private:
     std::string input;
-    uint64_t pos;
-    uint64_t rpos;
+    uint32_t pos;
+    uint32_t rpos;
     char curr;
     std::vector<char> blanks;
 

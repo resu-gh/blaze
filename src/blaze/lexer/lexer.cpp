@@ -62,7 +62,7 @@ tok::token lexer::make(tok::type t, const std::string &l) {
 }
 
 tok::token lexer::make_dice() {
-    const uint64_t pre = pos;
+    const auto pre = pos;
     read_char(); // skip `d`
     if (!is_digit(curr)) return make(tok::type::ILLEGAL_, extract_substr(pre, pos));
     while (is_digit(curr)) read_char();
@@ -70,7 +70,7 @@ tok::token lexer::make_dice() {
 }
 
 tok::token lexer::make_dice_or_num() {
-    const uint64_t pre = pos;
+    const auto pre = pos;
     while (is_digit(curr)) read_char();
     switch (curr) {
     case 'd':
