@@ -1,120 +1,118 @@
-#pragma once
+#pragma once // NOLINT(llvm-header-guard)
 #include "../except/except.hpp"
 #include "../random/random.hpp"
 #include <memory>
 #include <sstream>
 
-template <typename V> constexpr double dbl(V v) {
+template <typename V> constexpr double double_(V v) {
     return static_cast<double>(v);
 }
 
-class Generator;
+namespace blaze {
+namespace obj {
 
-namespace Blaze {
-namespace OBJ {
-
-enum class ObjectType {
+enum class type {
     ERROR,
     INTEGER,
     FLOAT,
     DICE,
-    SEQUENCE,
+    ARRAY,
 };
 
-std::ostream &operator<<(std::ostream &, const ObjectType &);
+std::ostream &operator<<(std::ostream &, const type &);
 
-class Object_ {
+class object_ {
   public:
-    Object_() = default;
-    Object_(const Object_ &) = default;
-    Object_(Object_ &&) = delete;
-    Object_ &operator=(const Object_ &) = default;
-    Object_ &operator=(Object_ &&) = delete;
-    virtual ~Object_() = default;
-    virtual ObjectType Type() = 0;
-    virtual std::string Inspect() = 0;
+    object_() = default;
+    object_(const object_ &) = default;
+    object_(object_ &&) = delete;
+    object_ &operator=(const object_ &) = default;
+    object_ &operator=(object_ &&) = delete;
+    virtual ~object_() = default;
+    virtual obj::type type() = 0;
+    virtual std::string inspect() = 0;
 };
 
-class Numeric_ : public Object_ {
+class numeric_ : public object_ {
   public:
-    Numeric_() = default;
-    Numeric_(const Numeric_ &) = default;
-    Numeric_(Numeric_ &&) = delete;
-    Numeric_ &operator=(const Numeric_ &) = default;
-    Numeric_ &operator=(Numeric_ &&) = delete;
-    ~Numeric_() override = default;
-    virtual std::unique_ptr<Numeric_> operator+() = 0;
-    virtual std::unique_ptr<Numeric_> operator-() = 0;
-    virtual std::unique_ptr<Numeric_> operator+(Numeric_ &) = 0;
-    virtual std::unique_ptr<Numeric_> operator-(Numeric_ &) = 0;
-    virtual std::unique_ptr<Numeric_> operator*(Numeric_ &) = 0;
-    virtual std::unique_ptr<Numeric_> operator/(Numeric_ &) = 0;
+    numeric_() = default;
+    numeric_(const numeric_ &) = default;
+    numeric_(numeric_ &&) = delete;
+    numeric_ &operator=(const numeric_ &) = default;
+    numeric_ &operator=(numeric_ &&) = delete;
+    ~numeric_() override = default;
+    virtual std::unique_ptr<numeric_> operator+() = 0;
+    virtual std::unique_ptr<numeric_> operator-() = 0;
+    virtual std::unique_ptr<numeric_> operator+(numeric_ &) = 0;
+    virtual std::unique_ptr<numeric_> operator-(numeric_ &) = 0;
+    virtual std::unique_ptr<numeric_> operator*(numeric_ &) = 0;
+    virtual std::unique_ptr<numeric_> operator/(numeric_ &) = 0;
 };
 
-class Integer final : public Numeric_ {
+class integer final : public numeric_ {
   public:
-    int64_t Value;
-    Integer();
-    explicit Integer(int64_t);
-    ObjectType Type() override;
-    std::string Inspect() override;
-    std::unique_ptr<Numeric_> operator+() override;
-    std::unique_ptr<Numeric_> operator-() override;
-    std::unique_ptr<Numeric_> operator+(Numeric_ &) override;
-    std::unique_ptr<Numeric_> operator-(Numeric_ &) override;
-    std::unique_ptr<Numeric_> operator*(Numeric_ &) override;
-    std::unique_ptr<Numeric_> operator/(Numeric_ &) override;
+    int64_t value; // NOLINT(misc-non-private-member-variables-in-classes)
+    integer();
+    explicit integer(int64_t);
+    obj::type type() override;
+    std::string inspect() override;
+    std::unique_ptr<numeric_> operator+() override;
+    std::unique_ptr<numeric_> operator-() override;
+    std::unique_ptr<numeric_> operator+(numeric_ &) override;
+    std::unique_ptr<numeric_> operator-(numeric_ &) override;
+    std::unique_ptr<numeric_> operator*(numeric_ &) override;
+    std::unique_ptr<numeric_> operator/(numeric_ &) override;
 };
 
-class Float final : public Numeric_ {
+class floating final : public numeric_ {
   public:
-    double Value;
-    Float();
-    explicit Float(double);
-    ObjectType Type() override;
-    std::string Inspect() override;
-    std::unique_ptr<Numeric_> operator+() override;
-    std::unique_ptr<Numeric_> operator-() override;
-    std::unique_ptr<Numeric_> operator+(Numeric_ &) override;
-    std::unique_ptr<Numeric_> operator-(Numeric_ &) override;
-    std::unique_ptr<Numeric_> operator*(Numeric_ &) override;
-    std::unique_ptr<Numeric_> operator/(Numeric_ &) override;
+    double values; // NOLINT(misc-non-private-member-variables-in-classes)
+    floating();
+    explicit floating(double);
+    obj::type type() override;
+    std::string inspect() override;
+    std::unique_ptr<numeric_> operator+() override;
+    std::unique_ptr<numeric_> operator-() override;
+    std::unique_ptr<numeric_> operator+(numeric_ &) override;
+    std::unique_ptr<numeric_> operator-(numeric_ &) override;
+    std::unique_ptr<numeric_> operator*(numeric_ &) override;
+    std::unique_ptr<numeric_> operator/(numeric_ &) override;
 };
 
-class Dice final : public Numeric_ {
+class dice final : public numeric_ {
   public:
-    uint64_t Value;
-    std::vector<uint64_t> Values;
-    explicit Dice(uint64_t, Rand::Generator_ &, uint64_t);
-    ObjectType Type() override;
-    std::string Inspect() override;
-    std::unique_ptr<Numeric_> operator+() override;
-    std::unique_ptr<Numeric_> operator-() override;
-    std::unique_ptr<Numeric_> operator+(Numeric_ &) override;
-    std::unique_ptr<Numeric_> operator-(Numeric_ &) override;
-    std::unique_ptr<Numeric_> operator*(Numeric_ &) override;
-    std::unique_ptr<Numeric_> operator/(Numeric_ &) override;
+    uint64_t value;               // NOLINT(misc-non-private-member-variables-in-classes)
+    std::vector<uint64_t> values; // NOLINT(misc-non-private-member-variables-in-classes)
+    explicit dice(uint64_t, rand::generator_ &, uint64_t);
+    obj::type type() override;
+    std::string inspect() override;
+    std::unique_ptr<numeric_> operator+() override;
+    std::unique_ptr<numeric_> operator-() override;
+    std::unique_ptr<numeric_> operator+(numeric_ &) override;
+    std::unique_ptr<numeric_> operator-(numeric_ &) override;
+    std::unique_ptr<numeric_> operator*(numeric_ &) override;
+    std::unique_ptr<numeric_> operator/(numeric_ &) override;
 };
 
-std::ostream &operator<<(std::ostream &, const Dice &);
+std::ostream &operator<<(std::ostream &, const dice &);
 
-class Sequence final : public Numeric_ {
+class array final : public numeric_ {
   public:
-    std::unique_ptr<Numeric_> Value;
-    std::vector<std::unique_ptr<Numeric_>> Values;
-    Sequence();
-    ObjectType Type() override;
-    std::string Inspect() override;
-    std::unique_ptr<Numeric_> operator+() override;
-    std::unique_ptr<Numeric_> operator-() override;
-    std::unique_ptr<Numeric_> operator+(Numeric_ &) override;
-    std::unique_ptr<Numeric_> operator-(Numeric_ &) override;
-    std::unique_ptr<Numeric_> operator*(Numeric_ &) override;
-    std::unique_ptr<Numeric_> operator/(Numeric_ &) override;
-    void operator<<(std::unique_ptr<Numeric_> &o);
+    std::unique_ptr<numeric_> value;               // NOLINT(misc-non-private-member-variables-in-classes)
+    std::vector<std::unique_ptr<numeric_>> values; // NOLINT(misc-non-private-member-variables-in-classes)
+    array();
+    obj::type type() override;
+    std::string inspect() override;
+    std::unique_ptr<numeric_> operator+() override;
+    std::unique_ptr<numeric_> operator-() override;
+    std::unique_ptr<numeric_> operator+(numeric_ &) override;
+    std::unique_ptr<numeric_> operator-(numeric_ &) override;
+    std::unique_ptr<numeric_> operator*(numeric_ &) override;
+    std::unique_ptr<numeric_> operator/(numeric_ &) override;
+    void operator<<(std::unique_ptr<numeric_> &o);
 };
 
-std::unique_ptr<Numeric_> trnc(double o);
+std::unique_ptr<numeric_> truncate_(double o);
 
-} // namespace OBJ
-} // namespace Blaze
+} // namespace obj
+} // namespace blaze

@@ -1,117 +1,117 @@
-#pragma once
+#pragma once // NOLINT(llvm-header-guard)
 #include "../lexer/lexer.hpp"
 #include <memory>
 #include <sstream>
 
-namespace Blaze {
-namespace AST {
+namespace blaze {
+namespace ast {
 
-class Node_ {
+class node_ {
   public:
-    Node_() = default;
-    Node_(const Node_ &) = default;
-    Node_(Node_ &&) = delete;
-    Node_ &operator=(const Node_ &) = default;
-    Node_ &operator=(Node_ &&) = delete;
-    virtual ~Node_() = default;
-    virtual std::string TokenLiteral() const = 0;
-    virtual std::string String() const = 0;
+    node_() = default;
+    node_(const node_ &) = default;
+    node_(node_ &&) = delete;
+    node_ &operator=(const node_ &) = default;
+    node_ &operator=(node_ &&) = delete;
+    virtual ~node_() = default;
+    virtual std::string token_lit() const = 0;
+    virtual std::string stringify() const = 0;
 };
 
-class Event_ : public Node_ {
+class event_ : public node_ {
   public:
-    Event_() = default;
-    Event_(const Event_ &) = default;
-    Event_(Event_ &&) = delete;
-    Event_ &operator=(const Event_ &) = default;
-    Event_ &operator=(Event_ &&) = delete;
-    ~Event_() override = default;
-    virtual void event_() const = 0;
+    event_() = default;
+    event_(const event_ &) = default;
+    event_(event_ &&) = delete;
+    event_ &operator=(const event_ &) = default;
+    event_ &operator=(event_ &&) = delete;
+    ~event_() override = default;
+    virtual void _event() const = 0;
 };
 
-class Expr_ : public Node_ {
+class expr_ : public node_ {
   public:
-    Expr_() = default;
-    Expr_(const Expr_ &) = default;
-    Expr_(Expr_ &&) = delete;
-    Expr_ &operator=(const Expr_ &) = default;
-    Expr_ &operator=(Expr_ &&) = delete;
-    bool expl = false;
-    ~Expr_() override = default;
+    expr_() = default;
+    expr_(const expr_ &) = default;
+    expr_(expr_ &&) = delete;
+    expr_ &operator=(const expr_ &) = default;
+    expr_ &operator=(expr_ &&) = delete;
+    bool expl = false; // NOLINT(misc-non-private-member-variables-in-classes)
+    ~expr_() override = default;
     virtual void _expr() const = 0;
 };
 
-class Root final : public Node_ {
+class root final : public node_ {
   public:
-    std::unique_ptr<Event_> Event;
-    Root();
-    std::string TokenLiteral() const override;
-    std::string String() const override;
+    std::unique_ptr<event_> event; // NOLINT(misc-non-private-member-variables-in-classes)
+    root();
+    std::string token_lit() const override;
+    std::string stringify() const override;
 };
 
-class Roll final : public Event_ {
+class roll final : public event_ {
   public:
-    Blaze::Token Token;
-    std::unique_ptr<Expr_> Expr;
-    Roll();
-    void event_() const override;
-    std::string TokenLiteral() const override;
-    std::string String() const override;
+    tok::token token;            // NOLINT(misc-non-private-member-variables-in-classes)
+    std::unique_ptr<expr_> expr; // NOLINT(misc-non-private-member-variables-in-classes)
+    roll();
+    void _event() const override;
+    std::string token_lit() const override;
+    std::string stringify() const override;
 };
 
-class Prefix final : public Expr_ {
+class prefix final : public expr_ {
   public:
-    Blaze::Token Token;
-    std::string Operator;
-    std::unique_ptr<Expr_> Right;
-    Prefix();
+    tok::token token;             // NOLINT(misc-non-private-member-variables-in-classes)
+    std::string oper;             // NOLINT(misc-non-private-member-variables-in-classes)
+    std::unique_ptr<expr_> right; // NOLINT(misc-non-private-member-variables-in-classes)
+    prefix();
     void _expr() const override;
-    std::string TokenLiteral() const override;
-    std::string String() const override;
+    std::string token_lit() const override;
+    std::string stringify() const override;
 };
 
-class Infix final : public Expr_ {
+class infix final : public expr_ {
   public:
-    Blaze::Token Token;
-    std::string Operator;
-    std::unique_ptr<Expr_> Left;
-    std::unique_ptr<Expr_> Right;
-    Infix();
+    tok::token token;             // NOLINT(misc-non-private-member-variables-in-classes)
+    std::string oper;             // NOLINT(misc-non-private-member-variables-in-classes)
+    std::unique_ptr<expr_> left;  // NOLINT(misc-non-private-member-variables-in-classes)
+    std::unique_ptr<expr_> right; // NOLINT(misc-non-private-member-variables-in-classes)
+    infix();
     void _expr() const override;
-    std::string TokenLiteral() const override;
-    std::string String() const override;
+    std::string token_lit() const override;
+    std::string stringify() const override;
 };
 
-class Integer final : public Expr_ {
+class integer final : public expr_ {
   public:
-    Blaze::Token Token;
-    int64_t Value;
-    Integer();
+    tok::token token; // NOLINT(misc-non-private-member-variables-in-classes)
+    int64_t value;    // NOLINT(misc-non-private-member-variables-in-classes)
+    integer();
     void _expr() const override;
-    std::string TokenLiteral() const override;
-    std::string String() const override;
+    std::string token_lit() const override;
+    std::string stringify() const override;
 };
 
-class Float final : public Expr_ {
+class floating final : public expr_ {
   public:
-    Blaze::Token Token;
-    double Value;
-    Float();
+    tok::token token; // NOLINT(misc-non-private-member-variables-in-classes)
+    double value;     // NOLINT(misc-non-private-member-variables-in-classes)
+    floating();
     void _expr() const override;
-    std::string TokenLiteral() const override;
-    std::string String() const override;
+    std::string token_lit() const override;
+    std::string stringify() const override;
 };
 
-class Dice final : public Expr_ {
+class dice final : public expr_ {
   public:
-    Blaze::Token Token;
-    uint64_t nDices;
-    uint64_t nFaces;
-    Dice();
+    tok::token token; // NOLINT(misc-non-private-member-variables-in-classes)
+    uint64_t n_dices; // NOLINT(misc-non-private-member-variables-in-classes)
+    uint64_t n_faces; // NOLINT(misc-non-private-member-variables-in-classes)
+    dice();
     void _expr() const override;
-    std::string TokenLiteral() const override;
-    std::string String() const override;
+    std::string token_lit() const override;
+    std::string stringify() const override;
 };
 
-} // namespace AST
-} // namespace Blaze
+} // namespace ast
+} // namespace blaze

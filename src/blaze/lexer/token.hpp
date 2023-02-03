@@ -1,9 +1,10 @@
-#pragma once
+#pragma once // NOLINT(llvm-header-guard)
 #include <iostream>
 
-namespace Blaze {
+namespace blaze {
+namespace tok {
 
-enum class TokenType {
+enum class type {
     ILLEGAL_,
     EOF_,
     PLUS,
@@ -18,13 +19,14 @@ enum class TokenType {
     CARET,
 };
 
-std::ostream &operator<<(std::ostream &, const TokenType &);
+std::ostream &operator<<(std::ostream &, const type &);
 
-struct Token final {
-    TokenType Type = TokenType::ILLEGAL_;
-    std::string Literal = "";
+struct token final {
+    tok::type type = type::ILLEGAL_;
+    std::string literal = "";
 };
 
-std::ostream &operator<<(std::ostream &, const Token &);
+std::ostream &operator<<(std::ostream &, const token &);
 
-} // namespace Blaze
+} // namespace tok
+} // namespace blaze

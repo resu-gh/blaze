@@ -1,21 +1,21 @@
 #include "./ast.hpp"
 
-namespace Blaze {
-namespace AST {
+namespace blaze {
+namespace ast {
 
-Integer::Integer()
-    : Token{TokenType::ILLEGAL_, ""}
-    , Value(0) {}
+integer::integer()
+    : token{tok::type::ILLEGAL_, ""}
+    , value(0) {}
 
-void Integer::_expr() const {}
+void integer::_expr() const {}
 
-std::string Integer::TokenLiteral() const {
-    return Token.Literal;
+std::string integer::token_lit() const {
+    return token.literal;
 }
 
-std::string Integer::String() const {
-    return Token.Literal;
+std::string integer::stringify() const {
+    return token.literal;
 }
 
-} // namespace AST
-} // namespace Blaze
+} // namespace ast
+} // namespace blaze

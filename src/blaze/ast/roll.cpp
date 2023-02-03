@@ -1,21 +1,21 @@
 #include "./ast.hpp"
 
-namespace Blaze {
-namespace AST {
+namespace blaze {
+namespace ast {
 
-Roll::Roll()
-    : Token{TokenType::ILLEGAL_, ""}
-    , Expr() {}
+roll::roll()
+    : token{tok::type::ILLEGAL_, ""}
+    , expr() {}
 
-void Roll::event_() const {}
+void roll::_event() const {}
 
-std::string Roll::TokenLiteral() const {
-    return Token.Literal;
+std::string roll::token_lit() const {
+    return token.literal;
 }
 
-std::string Roll::String() const {
-    return (Expr != nullptr) ? Expr->String() : "nil";
+std::string roll::stringify() const {
+    return (expr != nullptr) ? expr->stringify() : "nil";
 }
 
-} // namespace AST
-} // namespace Blaze
+} // namespace ast
+} // namespace blaze

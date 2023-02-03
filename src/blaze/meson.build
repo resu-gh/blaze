@@ -43,7 +43,7 @@ lib_blaze_srcs = [
   'object/float.cpp',
   'object/integer.cpp',
   'object/object.cpp',
-  'object/sequence.cpp',
+  'object/array.cpp',
   'parser/parser.cpp',
   'parser/precedence.cpp',
   'random/csprng.cpp',

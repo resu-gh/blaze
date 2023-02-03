@@ -1,11 +1,11 @@
-#pragma once
+#pragma once // NOLINT(llvm-header-guard)
 #include "./token.hpp"
 #include <algorithm>
 #include <vector>
 
-namespace Blaze {
+namespace blaze {
 
-class Lexer final {
+class lexer final {
   private:
     std::string input;
     uint64_t pos;
@@ -13,18 +13,18 @@ class Lexer final {
     char curr;
     std::vector<char> blanks;
 
-    void readChar();
-    void skipBlanks();
-    bool isDigit(char);
-    Token make(TokenType, const std::string &);
-    Token makeDice();
-    Token makeDiceOrNumber();
-    std::string extractSubstr(uint32_t, uint32_t);
+    void read_char();
+    void skip_blanks();
+    bool is_digit(char);
+    tok::token make(tok::type, const std::string &);
+    tok::token make_dice();
+    tok::token make_dice_or_num();
+    std::string extract_substr(uint32_t, uint32_t);
 
   public:
-    explicit Lexer(const std::string &);
+    explicit lexer(const std::string &);
 
-    Token NextToken();
+    tok::token next_token();
 };
 
-} // namespace Blaze
+} // namespace blaze

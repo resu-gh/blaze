@@ -1,30 +1,30 @@
-#pragma once
+#pragma once // NOLINT(llvm-header-guard)
 #include "../ast/ast.hpp"
 #include "../except/except.hpp"
 #include "../object/object.hpp"
 
-namespace Blaze {
+namespace blaze {
 
-class Evaluator final {
+class evaluator final {
   private:
     std::ostream *stream;
-    Rand::Generator_ &generator;
+    rand::generator_ &generator;
 
-    std::unique_ptr<OBJ::Numeric_> evalInteger(AST::Integer &, bool = true);
-    std::unique_ptr<OBJ::Numeric_> evalFloat(AST::Float &, bool = true);
-    std::unique_ptr<OBJ::Numeric_> evalDice(AST::Dice &, bool = true);
-    std::unique_ptr<OBJ::Numeric_> evalPrefix(AST::Prefix &, bool = true);
-    std::unique_ptr<OBJ::Numeric_> solvePrefix(std::string &, OBJ::Numeric_ &);
-    std::unique_ptr<OBJ::Numeric_> evalInfix(AST::Infix &, bool = true);
-    std::unique_ptr<OBJ::Numeric_> evalMath(AST::Infix &, bool = true);
-    std::unique_ptr<OBJ::Numeric_> solveMath(std::string &, OBJ::Numeric_ &, OBJ::Numeric_ &);
-    std::unique_ptr<OBJ::Numeric_> evalReps(AST::Infix &);
-    std::unique_ptr<OBJ::Numeric_> solveReps(int64_t, AST::Expr_ &);
+    std::unique_ptr<obj::numeric_> eval_integer(ast::integer &, bool = true);
+    std::unique_ptr<obj::numeric_> eval_floating(ast::floating &, bool = true);
+    std::unique_ptr<obj::numeric_> eval_dice(ast::dice &, bool = true);
+    std::unique_ptr<obj::numeric_> eval_prefix(ast::prefix &, bool = true);
+    std::unique_ptr<obj::numeric_> solve_prefix(std::string &, obj::numeric_ &);
+    std::unique_ptr<obj::numeric_> eval_infix(ast::infix &, bool = true);
+    std::unique_ptr<obj::numeric_> eval_infix_math(ast::infix &, bool = true);
+    std::unique_ptr<obj::numeric_> solve_infix_math(std::string &, obj::numeric_ &, obj::numeric_ &);
+    std::unique_ptr<obj::numeric_> eval_infix_reps(ast::infix &);
+    std::unique_ptr<obj::numeric_> solve_infix_reps(int64_t, ast::expr_ &);
 
   public:
-    explicit Evaluator(Rand::Generator_ &, std::ostream &);
+    explicit evaluator(rand::generator_ &, std::ostream &);
 
-    std::unique_ptr<OBJ::Numeric_> Eval(AST::Node_ &, bool = true);
+    std::unique_ptr<obj::numeric_> eval(ast::node_ &, bool = true);
 };
 
-} // namespace Blaze
+} // namespace blaze

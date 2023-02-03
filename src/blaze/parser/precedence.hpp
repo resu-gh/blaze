@@ -1,9 +1,9 @@
-#pragma once
+#pragma once // NOLINT(llvm-header-guard)
 #include <iostream>
 
-namespace Blaze {
+namespace blaze {
 
-enum class Precedence {
+enum class precedence {
     LOWEST,
     SUM,
     PRODUCT,
@@ -11,6 +11,6 @@ enum class Precedence {
     PREFIX,
 };
 
-std::ostream &operator<<(std::ostream &, const Precedence &);
+std::ostream &operator<<(std::ostream &, const precedence &);
 
-} // namespace Blaze
+} // namespace blaze

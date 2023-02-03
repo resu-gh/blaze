@@ -1,21 +1,21 @@
 #include "./ast.hpp"
 
-namespace Blaze {
-namespace AST {
+namespace blaze {
+namespace ast {
 
-Float::Float()
-    : Token{TokenType::ILLEGAL_, ""}
-    , Value(0) {}
+floating::floating()
+    : token{tok::type::ILLEGAL_, ""}
+    , value(0) {}
 
-void Float::_expr() const {}
+void floating::_expr() const {}
 
-std::string Float::TokenLiteral() const {
-    return Token.Literal;
+std::string floating::token_lit() const {
+    return token.literal;
 }
 
-std::string Float::String() const {
-    return Token.Literal;
+std::string floating::stringify() const {
+    return token.literal;
 }
 
-} // namespace AST
-} // namespace Blaze
+} // namespace ast
+} // namespace blaze

@@ -1,10 +1,10 @@
-#pragma once
+#pragma once // NOLINT(llvm-header-guard)
 #include "./format.hpp"
 
-namespace Blaze {
+namespace blaze {
 
 template <typename... T> std::string format(const std::string &f, T &&...a) {
     return (boost::format(f) % ... % a).str();
 }
 
-} // namespace Blaze
+} // namespace blaze

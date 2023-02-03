@@ -1,16 +1,17 @@
 #include "./random.hpp"
 
-namespace Blaze {
-namespace Rand {
+namespace blaze {
+namespace rand {
 
-CSPRNG::CSPRNG(){};
+csprng::csprng(){};
 
-uint64_t CSPRNG::Generate(uint64_t r) {
+uint64_t csprng::spawn(uint64_t r) {
     uint64_t x = 0;
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     auto ret = RAND_bytes(reinterpret_cast<unsigned char *>(&x), sizeof x);
-    if (ret == 0) throw Exception("CSRNG Error: Low Entropy");
+    if (ret == 0) throw exception("blaze::rand::csrng error: low entropy");
     return (x % r) + 1;
 }
 
-} // namespace Rand
-} // namespace Blaze
+} // namespace rand
+} // namespace blaze

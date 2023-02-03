@@ -1,15 +1,15 @@
-#pragma once
+#pragma once // NOLINT(llvm-header-guard)
 #include "../evaluator/evaluator.hpp"
 #include "../lexer/lexer.hpp"
 #include "../parser/parser.hpp"
 #include "../random/random.hpp"
 #include <iostream>
 
-namespace Blaze {
+namespace blaze {
 
-class Compiler {
+class compiler {
   public:
-    explicit Compiler(const std::string &);
+    explicit compiler(const std::string &);
 };
 
-} // namespace Blaze
+} // namespace blaze

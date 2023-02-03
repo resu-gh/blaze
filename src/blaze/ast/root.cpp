@@ -1,17 +1,17 @@
 #include "./ast.hpp"
 
-namespace Blaze {
-namespace AST {
+namespace blaze {
+namespace ast {
 
-Root::Root() {}
+root::root() {}
 
-std::string Root::TokenLiteral() const {
-    return (Event != nullptr) ? Event->TokenLiteral() : "nil";
+std::string root::token_lit() const {
+    return (event != nullptr) ? event->token_lit() : "nil";
 }
 
-std::string Root::String() const {
-    return (Event != nullptr) ? Event->String() : "nil";
+std::string root::stringify() const {
+    return (event != nullptr) ? event->stringify() : "nil";
 }
 
-} // namespace AST
-} // namespace Blaze
+} // namespace ast
+} // namespace blaze

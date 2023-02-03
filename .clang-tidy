@@ -9,7 +9,7 @@ Checks: 'clang-diagnostic-*,
          misc-*,
          cppcoreguidelines-*'
 WarningsAsErrors: ''
-HeaderFilterRegex: ''
+HeaderFilterRegex: '.*'
 AnalyzeTemporaryDtors: false
 FormatStyle: none
 User: resu

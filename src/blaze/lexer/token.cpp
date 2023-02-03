@@ -1,27 +1,29 @@
 #include "./token.hpp"
 
-namespace Blaze {
+namespace blaze {
+namespace tok {
 
-std::ostream &operator<<(std::ostream &o, const TokenType &t) {
+std::ostream &operator<<(std::ostream &o, const type &t) {
     switch (t) {
-    case TokenType::ILLEGAL_: o << "TokenType::ILLEGAL_"; break;
-    case TokenType::EOF_: o << "TokenType::EOF_"; break;
-    case TokenType::PLUS: o << "TokenType::PLUS"; break;
-    case TokenType::MINUS: o << "TokenType::MINUS"; break;
-    case TokenType::STAR: o << "TokenType::STAR"; break;
-    case TokenType::SLASH: o << "TokenType::SLASH"; break;
-    case TokenType::DICE: o << "TokenType::DICE"; break;
-    case TokenType::INTEGER: o << "TokenType::INTEGER"; break;
-    case TokenType::FLOAT: o << "TokenType::FLOAT"; break;
-    case TokenType::LPAREN: o << "TokenType::LPAREN"; break;
-    case TokenType::RPAREN: o << "TokenType::RPAREN"; break;
-    case TokenType::CARET: o << "TokenType::CARET"; break;
+    case type::ILLEGAL_: o << "tok::type::ILLEGAL_"; break;
+    case type::EOF_: o << "tok::type::EOF_"; break;
+    case type::PLUS: o << "tok::type::PLUS"; break;
+    case type::MINUS: o << "tok::type::MINUS"; break;
+    case type::STAR: o << "tok::type::STAR"; break;
+    case type::SLASH: o << "tok::type::SLASH"; break;
+    case type::DICE: o << "tok::type::DICE"; break;
+    case type::INTEGER: o << "tok::type::INTEGER"; break;
+    case type::FLOAT: o << "tok::type::FLOAT"; break;
+    case type::LPAREN: o << "tok::type::LPAREN"; break;
+    case type::RPAREN: o << "tok::type::RPAREN"; break;
+    case type::CARET: o << "tok::type::CARET"; break;
     }
     return o;
 }
 
-std::ostream &operator<<(std::ostream &o, const Token &k) {
-    return o << "Token {" << k.Type << " " << k.Literal << "}";
+std::ostream &operator<<(std::ostream &o, const token &k) {
+    return o << "tok::token {" << k.type << " " << k.literal << "}";
 }
 
-} // namespace Blaze
+} // namespace tok
+} // namespace blaze

@@ -1,29 +1,29 @@
 #include "./ast.hpp"
 
-namespace Blaze {
-namespace AST {
+namespace blaze {
+namespace ast {
 
-Infix::Infix()
-    : Token{TokenType::ILLEGAL_, ""}
-    , Operator()
-    , Left()
-    , Right() {}
+infix::infix()
+    : token{tok::type::ILLEGAL_, ""}
+    , oper()
+    , left()
+    , right() {}
 
-void Infix::_expr() const {}
+void infix::_expr() const {}
 
-std::string Infix::TokenLiteral() const {
-    return Token.Literal;
+std::string infix::token_lit() const {
+    return token.literal;
 }
 
-std::string Infix::String() const {
+std::string infix::stringify() const {
     std::stringstream stream;
     stream << "(";
-    stream << (Left == nullptr ? "nil" : Left->String());
-    stream << " " + Operator + " ";
-    stream << (Right == nullptr ? "nil" : Right->String());
+    stream << (left == nullptr ? "nil" : left->stringify());
+    stream << " " + oper + " ";
+    stream << (right == nullptr ? "nil" : right->stringify());
     stream << ")";
     return stream.str();
 }
 
-} // namespace AST
-} // namespace Blaze
+} // namespace ast
+} // namespace blaze

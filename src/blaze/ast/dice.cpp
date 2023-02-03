@@ -1,26 +1,26 @@
 #include "./ast.hpp"
 
-namespace Blaze {
-namespace AST {
+namespace blaze {
+namespace ast {
 
-Dice::Dice()
-    : Token{TokenType::ILLEGAL_, ""}
-    , nDices(0)
-    , nFaces(0) {}
+dice::dice()
+    : token{tok::type::ILLEGAL_, ""}
+    , n_dices(0)
+    , n_faces(0) {}
 
-void Dice::_expr() const {}
+void dice::_expr() const {}
 
-std::string Dice::TokenLiteral() const {
-    return Token.Literal;
+std::string dice::token_lit() const {
+    return token.literal;
 }
 
-std::string Dice::String() const {
+std::string dice::stringify() const {
     std::stringstream stream;
-    stream << nDices;
+    stream << n_dices;
     stream << "d";
-    stream << nFaces;
+    stream << n_faces;
     return stream.str();
 }
 
-} // namespace AST
-} // namespace Blaze
+} // namespace ast
+} // namespace blaze

@@ -5,7 +5,7 @@
 #include <glog/logging.h>
 
 void glogPrefix(std::ostream &s, const google::LogMessageInfo &l, void *) {
-    s << l.severity[0] << " ";
+    s << l.severity[0] << " "; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     s << l.time.hour() << ":";
     s << l.time.min() << ":";
     s << l.time.sec() << " ";
@@ -18,19 +18,20 @@ int main(int argc, char *argv[]) {
     ::testing::InitGoogleTest(&argc, argv);
     fLB::FLAGS_logtostderr = 1;
     fLB::FLAGS_colorlogtostderr = 1;
-    ::google::InitGoogleLogging(argv[0], &glogPrefix);
-    LOG(INFO) << "Running tests\n";
+    ::google::InitGoogleLogging(argv[0], &glogPrefix); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    LOG(INFO) << "running tests\n";
     auto r = RUN_ALL_TESTS();
-    r ? LOG(ERROR) << "Failed" << std::endl : LOG(INFO) << "Success" << std::endl;
+    r ? LOG(ERROR) << "failed" << std::endl : LOG(INFO) << "success" << std::endl;
     return 0;
 }
 
-TEST(ParserT, Integer) {
-    struct Test {
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-owning-memory)
+TEST(ParserTest, integer) {
+    struct test_case {
         std::string input;
-        int64_t expectedValue;
+        int64_t expected_value;
     };
-    const std::vector<Test> tests = {
+    const std::vector<test_case> tests = {
         // clang-format off
         {"01", 1},
         {"0012", 12},
@@ -43,30 +44,31 @@ TEST(ParserT, Integer) {
         // clang-format on
     };
     for (auto &test : tests) {
-        Blaze::Lexer lexer(test.input);
-        Blaze::Parser parser(lexer);
-        auto root = parser.ParseRoot();
-        // test: (cast) the produced Event_ must be an Roll
-        auto *roll = dynamic_cast<Blaze::AST::Roll *>(root->Event.get());
+        blaze::lexer lexer(test.input);
+        blaze::parser parser(lexer);
+        auto root = parser.parse_root();
+        // test: (cast) the produced event_ must be an roll
+        auto *roll = dynamic_cast<blaze::ast::roll *>(root->event.get());
         ASSERT_NE(roll, nullptr);
-        // test: (cast) the produced Roll.Expr must be an Expr_
-        auto *expr = dynamic_cast<Blaze::AST::Expr_ *>(roll->Expr.get());
+        // test: (cast) the produced roll.expr must be an expr_
+        auto *expr = dynamic_cast<blaze::ast::expr_ *>(roll->expr.get());
         ASSERT_NE(expr, nullptr);
-        // test: (cast) the produced Expr_ must be an Integer
-        auto *intl = dynamic_cast<Blaze::AST::Integer *>(expr);
+        // test: (cast) the produced expr_ must be an integer
+        auto *intl = dynamic_cast<blaze::ast::integer *>(expr);
         ASSERT_NE(intl, nullptr);
         // expectations
-        EXPECT_EQ(intl->Token.Type, Blaze::TokenType::INTEGER);
-        EXPECT_EQ(intl->Value, test.expectedValue);
+        EXPECT_EQ(intl->token.type, blaze::tok::type::INTEGER);
+        EXPECT_EQ(intl->value, test.expected_value);
     }
 }
 
-TEST(ParserT, Float) {
-    struct Test {
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-owning-memory)
+TEST(ParserTest, float) {
+    struct test_case {
         std::string input;
-        double expectedValue;
+        double expected_value;
     };
-    const std::vector<Test> tests = {
+    const std::vector<test_case> tests = {
         // clang-format off
         {"01.0", 1.0},
         {"0012.4", 12.4},
@@ -79,32 +81,33 @@ TEST(ParserT, Float) {
         // clang-format on
     };
     for (auto &test : tests) {
-        Blaze::Lexer lexer(test.input);
-        Blaze::Parser parser(lexer);
-        auto root = parser.ParseRoot();
-        // test: (cast) the produced Event_ must be an Roll
-        auto *roll = dynamic_cast<Blaze::AST::Roll *>(root->Event.get());
+        blaze::lexer lexer(test.input);
+        blaze::parser parser(lexer);
+        auto root = parser.parse_root();
+        // test: (cast) the produced event_ must be an roll
+        auto *roll = dynamic_cast<blaze::ast::roll *>(root->event.get());
         ASSERT_NE(roll, nullptr);
-        // test: (cast) the produced Roll.Expr must be an Expr_
-        auto *expr = dynamic_cast<Blaze::AST::Expr_ *>(roll->Expr.get());
+        // test: (cast) the produced roll.expr must be an expr_
+        auto *expr = dynamic_cast<blaze::ast::expr_ *>(roll->expr.get());
         ASSERT_NE(expr, nullptr);
-        // test: (cast) the produced Expr_ must be an Float
-        auto *fltl = dynamic_cast<Blaze::AST::Float *>(expr);
+        // test: (cast) the produced expr_ must be an float
+        auto *fltl = dynamic_cast<blaze::ast::floating *>(expr);
         ASSERT_NE(fltl, nullptr);
         // expectations
-        EXPECT_EQ(fltl->Token.Type, Blaze::TokenType::FLOAT);
-        EXPECT_EQ(fltl->Value, test.expectedValue);
+        EXPECT_EQ(fltl->token.type, blaze::tok::type::FLOAT);
+        EXPECT_EQ(fltl->value, test.expected_value);
     }
 }
 
-TEST(ParserT, Dice) {
-    struct Test {
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-owning-memory)
+TEST(ParserTest, dice) {
+    struct test_case {
         std::string input;
-        int64_t expectednDices;
-        int64_t expectednFaces;
-        std::string expectedTokenLit;
+        uint64_t expected_n_dices;
+        uint64_t expected_n_faces;
+        std::string expected_token_lit;
     };
-    const std::vector<Test> tests = {
+    const std::vector<test_case> tests = {
         // clang-format off
         {"10d2", 10, 2, "10d2"},
         {"2398d10804", 2398, 10804, "2398d10804"},
@@ -115,141 +118,144 @@ TEST(ParserT, Dice) {
         // clang-format on
     };
     for (auto &test : tests) {
-        Blaze::Lexer lexer(test.input);
-        Blaze::Parser parser(lexer);
-        auto root = parser.ParseRoot();
-        // test: (cast) the produced Event_ must be an Roll
-        auto *roll = dynamic_cast<Blaze::AST::Roll *>(root->Event.get());
+        blaze::lexer lexer(test.input);
+        blaze::parser parser(lexer);
+        auto root = parser.parse_root();
+        // test: (cast) the produced event_ must be an roll
+        auto *roll = dynamic_cast<blaze::ast::roll *>(root->event.get());
         ASSERT_NE(roll, nullptr);
-        // test: (cast) the produced Roll.Expr must be an Expr_
-        auto *expr = dynamic_cast<Blaze::AST::Expr_ *>(roll->Expr.get());
+        // test: (cast) the produced roll.expr must be an expr_
+        auto *expr = dynamic_cast<blaze::ast::expr_ *>(roll->expr.get());
         ASSERT_NE(expr, nullptr);
-        // test: (cast) the produced Expr_ must be an Dice
-        auto *dicel = dynamic_cast<Blaze::AST::Dice *>(expr);
+        // test: (cast) the produced expr_ must be an dice
+        auto *dicel = dynamic_cast<blaze::ast::dice *>(expr);
         ASSERT_NE(dicel, nullptr);
         // expectations
-        EXPECT_EQ(dicel->Token.Type, Blaze::TokenType::DICE);
-        EXPECT_EQ(dicel->nDices, test.expectednDices);
-        EXPECT_EQ(dicel->nFaces, test.expectednFaces);
-        EXPECT_EQ(dicel->Token.Literal, test.expectedTokenLit);
+        EXPECT_EQ(dicel->token.type, blaze::tok::type::DICE);
+        EXPECT_EQ(dicel->n_dices, test.expected_n_dices);
+        EXPECT_EQ(dicel->n_faces, test.expected_n_faces);
+        EXPECT_EQ(dicel->token.literal, test.expected_token_lit);
     }
 }
 
-TEST(ParserT, prefixInteger) {
-    struct Test {
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-owning-memory)
+TEST(ParserTest, prefixInteger) {
+    struct test_case {
         std::string input;
-        Blaze::TokenType expectedOperatorType;
-        std::string expectedOperator;
-        int64_t expectedValue;
-        std::string expectedTokenLit;
+        blaze::tok::type expected_oper_type;
+        std::string expected_oper;
+        int64_t expected_value;
+        std::string expected_token_lit;
     };
-    const std::vector<Test> tests = {
+    const std::vector<test_case> tests = {
         // clang-format off
-        {"-3", Blaze::TokenType::MINUS, "-", 3, "-3"},
-        {"-2398", Blaze::TokenType::MINUS, "-", 2398, "-2398"},
-        {"+18000", Blaze::TokenType::PLUS, "+", 18000, "+18000"},
+        {"-3", blaze::tok::type::MINUS, "-", 3, "-3"},
+        {"-2398", blaze::tok::type::MINUS, "-", 2398, "-2398"},
+        {"+18000", blaze::tok::type::PLUS, "+", 18000, "+18000"},
         // clang-format on
     };
     for (auto &test : tests) {
-        Blaze::Lexer lexer(test.input);
-        Blaze::Parser parser(lexer);
-        auto root = parser.ParseRoot();
-        // test: (cast) the produced Event_ must be an Roll
-        auto *roll = dynamic_cast<Blaze::AST::Roll *>(root->Event.get());
+        blaze::lexer lexer(test.input);
+        blaze::parser parser(lexer);
+        auto root = parser.parse_root();
+        // test: (cast) the produced event_ must be an roll
+        auto *roll = dynamic_cast<blaze::ast::roll *>(root->event.get());
         ASSERT_NE(roll, nullptr);
-        // test: (cast) the produced Roll.Expr must be an Expr_
-        auto *expr = dynamic_cast<Blaze::AST::Expr_ *>(roll->Expr.get());
+        // test: (cast) the produced roll.expr must be an expr_
+        auto *expr = dynamic_cast<blaze::ast::expr_ *>(roll->expr.get());
         ASSERT_NE(expr, nullptr);
-        // test: (cast) the produced Expr_ must be an Prefix
-        auto *prefix = dynamic_cast<Blaze::AST::Prefix *>(expr);
+        // test: (cast) the produced expr_ must be an prefix
+        auto *prefix = dynamic_cast<blaze::ast::prefix *>(expr);
         ASSERT_NE(prefix, nullptr);
-        // test: (cast) the produced Prefix.Right must be an Integer
-        auto *right = dynamic_cast<Blaze::AST::Integer *>(prefix->Right.get());
+        // test: (cast) the produced prefix.right must be an integer
+        auto *right = dynamic_cast<blaze::ast::integer *>(prefix->right.get());
         ASSERT_NE(right, nullptr);
         // expectations
-        EXPECT_EQ(prefix->Token.Type, test.expectedOperatorType);
-        EXPECT_EQ(prefix->Operator, test.expectedOperator);
-        EXPECT_EQ(right->Value, test.expectedValue);
-        EXPECT_EQ(prefix->Token.Literal + right->Token.Literal, test.expectedTokenLit);
+        EXPECT_EQ(prefix->token.type, test.expected_oper_type);
+        EXPECT_EQ(prefix->oper, test.expected_oper);
+        EXPECT_EQ(right->value, test.expected_value);
+        EXPECT_EQ(prefix->token.literal + right->token.literal, test.expected_token_lit);
     }
 }
 
-TEST(ParserT, prefixFloat) {
-    struct Test {
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-owning-memory)
+TEST(ParserTest, prefixFloat) {
+    struct test_case {
         std::string input;
-        Blaze::TokenType expectedOperatorType;
-        std::string expectedOperator;
-        double expectedValue;
-        std::string expectedTokenLit;
+        blaze::tok::type expected_open_type;
+        std::string expected_oper;
+        double expected_value;
+        std::string expected_token_lit;
     };
-    const std::vector<Test> tests = {
+    const std::vector<test_case> tests = {
         // clang-format off
-        {"-3.3", Blaze::TokenType::MINUS, "-", 3.3, "-3.3"},
-        {"-23.98", Blaze::TokenType::MINUS, "-", 23.98, "-23.98"},
-        {"+230.98", Blaze::TokenType::PLUS, "+", 230.98, "+230.98"},
+        {"-3.3", blaze::tok::type::MINUS, "-", 3.3, "-3.3"},
+        {"-23.98", blaze::tok::type::MINUS, "-", 23.98, "-23.98"},
+        {"+230.98", blaze::tok::type::PLUS, "+", 230.98, "+230.98"},
         // clang-format on
     };
     for (auto &test : tests) {
-        Blaze::Lexer lexer(test.input);
-        Blaze::Parser parser(lexer);
-        auto root = parser.ParseRoot();
-        // test: (cast) the produced Event_ must be an Roll
-        auto *roll = dynamic_cast<Blaze::AST::Roll *>(root->Event.get());
+        blaze::lexer lexer(test.input);
+        blaze::parser parser(lexer);
+        auto root = parser.parse_root();
+        // test: (cast) the produced event_ must be an roll
+        auto *roll = dynamic_cast<blaze::ast::roll *>(root->event.get());
         ASSERT_NE(roll, nullptr);
-        // test: (cast) the produced Roll.Expr must be an Expr_
-        auto *expr = dynamic_cast<Blaze::AST::Expr_ *>(roll->Expr.get());
+        // test: (cast) the produced roll.expr must be an expr_
+        auto *expr = dynamic_cast<blaze::ast::expr_ *>(roll->expr.get());
         ASSERT_NE(expr, nullptr);
-        // test: (cast) the produced Expr_ must be an Prefix
-        auto *prefix = dynamic_cast<Blaze::AST::Prefix *>(expr);
+        // test: (cast) the produced expr_ must be an prefix
+        auto *prefix = dynamic_cast<blaze::ast::prefix *>(expr);
         ASSERT_NE(prefix, nullptr);
-        // test: (cast) the produced Prefix.Right must be an Float
-        auto *right = dynamic_cast<Blaze::AST::Float *>(prefix->Right.get());
+        // test: (cast) the produced prefix.right must be an float
+        auto *right = dynamic_cast<blaze::ast::floating *>(prefix->right.get());
         ASSERT_NE(right, nullptr);
         // expectations
-        EXPECT_EQ(prefix->Token.Type, test.expectedOperatorType);
-        EXPECT_EQ(prefix->Operator, test.expectedOperator);
-        EXPECT_EQ(right->Value, test.expectedValue);
-        EXPECT_EQ(prefix->Token.Literal + right->Token.Literal, test.expectedTokenLit);
+        EXPECT_EQ(prefix->token.type, test.expected_open_type);
+        EXPECT_EQ(prefix->oper, test.expected_oper);
+        EXPECT_EQ(right->value, test.expected_value);
+        EXPECT_EQ(prefix->token.literal + right->token.literal, test.expected_token_lit);
     }
 }
 
-TEST(ParserT, prefixDice) {
-    struct Test {
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables,cppcoreguidelines-owning-memory)
+TEST(ParserTest, prefixDice) {
+    struct test_case {
         std::string input;
-        Blaze::TokenType expectedOperatorType;
-        std::string expectedOperator;
-        uint64_t expectednDices;
-        uint64_t expectednFaces;
-        std::string expectedTokenLit;
+        blaze::tok::type expected_oper_type;
+        std::string expected_oper;
+        uint64_t expected_n_dices;
+        uint64_t expected_n_faces;
+        std::string expected_token_lit;
     };
-    const std::vector<Test> tests = {
+    const std::vector<test_case> tests = {
         // clang-format off
-        {"-1d6", Blaze::TokenType::MINUS, "-", 1, 6, "-1d6"},
-        {"-d6", Blaze::TokenType::MINUS, "-", 1, 6, "-d6"},
-        {"+100d6", Blaze::TokenType::PLUS, "+", 100, 6, "+100d6"},
+        {"-1d6", blaze::tok::type::MINUS, "-", 1, 6, "-1d6"},
+        {"-d6", blaze::tok::type::MINUS, "-", 1, 6, "-d6"},
+        {"+100d6", blaze::tok::type::PLUS, "+", 100, 6, "+100d6"},
         // clang-format on
     };
     for (auto &test : tests) {
-        Blaze::Lexer lexer(test.input);
-        Blaze::Parser parser(lexer);
-        auto root = parser.ParseRoot();
-        // test: (cast) the produced Event_ must be an Roll
-        auto *roll = dynamic_cast<Blaze::AST::Roll *>(root->Event.get());
+        blaze::lexer lexer(test.input);
+        blaze::parser parser(lexer);
+        auto root = parser.parse_root();
+        // test: (cast) the produced event_ must be an roll
+        auto *roll = dynamic_cast<blaze::ast::roll *>(root->event.get());
         ASSERT_NE(roll, nullptr);
-        // test: (cast) the produced Roll.Expr must be an Expr_
-        auto *expr = dynamic_cast<Blaze::AST::Expr_ *>(roll->Expr.get());
+        // test: (cast) the produced roll.expr must be an expr_
+        auto *expr = dynamic_cast<blaze::ast::expr_ *>(roll->expr.get());
         ASSERT_NE(expr, nullptr);
-        // test: (cast) the produced Expr_ must be an Prefix
-        auto *prefix = dynamic_cast<Blaze::AST::Prefix *>(expr);
+        // test: (cast) the produced expr_ must be an prefix
+        auto *prefix = dynamic_cast<blaze::ast::prefix *>(expr);
         ASSERT_NE(prefix, nullptr);
-        // test: (cast) the produced Prefix.Right must be an Float
-        auto *right = dynamic_cast<Blaze::AST::Dice *>(prefix->Right.get());
+        // test: (cast) the produced prefix.right must be an float
+        auto *right = dynamic_cast<blaze::ast::dice *>(prefix->right.get());
         ASSERT_NE(right, nullptr);
         // expectations
-        EXPECT_EQ(prefix->Token.Type, test.expectedOperatorType);
-        EXPECT_EQ(prefix->Operator, test.expectedOperator);
-        EXPECT_EQ(right->nDices, test.expectednDices);
-        EXPECT_EQ(right->nFaces, test.expectednFaces);
-        EXPECT_EQ(prefix->Token.Literal + right->Token.Literal, test.expectedTokenLit);
+        EXPECT_EQ(prefix->token.type, test.expected_oper_type);
+        EXPECT_EQ(prefix->oper, test.expected_oper);
+        EXPECT_EQ(right->n_dices, test.expected_n_dices);
+        EXPECT_EQ(right->n_faces, test.expected_n_faces);
+        EXPECT_EQ(prefix->token.literal + right->token.literal, test.expected_token_lit);
     }
 }

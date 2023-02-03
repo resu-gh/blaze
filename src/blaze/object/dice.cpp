@@ -1,79 +1,79 @@
 #include "./object.hpp"
 
-namespace Blaze {
-namespace OBJ {
+namespace blaze {
+namespace obj {
 
-Dice::Dice(uint64_t nDices, Rand::Generator_ &g, uint64_t nFaces)
-    : Value(0)
-    , Values() {
-    for (uint64_t i = 0; i < nDices; ++i) {
-        const uint64_t v = g.Generate(nFaces);
-        Value += v;
-        Values.push_back(v);
+dice::dice(uint64_t nd, rand::generator_ &g, uint64_t nf)
+    : value(0)
+    , values() {
+    for (uint64_t i = 0; i < nd; ++i) {
+        const uint64_t v = g.spawn(nf);
+        value += v;
+        values.push_back(v);
     }
 }
 
-ObjectType Dice::Type() {
-    return ObjectType::DICE;
+type dice::type() {
+    return type::DICE;
 }
 
-std::string Dice::Inspect() {
-    return std::to_string(Value);
+std::string dice::inspect() {
+    return std::to_string(value);
 }
 
-std::unique_ptr<Numeric_> Dice::operator+() {
-    return std::make_unique<Integer>(+Value);
+std::unique_ptr<numeric_> dice::operator+() {
+    return std::make_unique<integer>(+value);
 }
 
-std::unique_ptr<Numeric_> Dice::operator-() {
-    return std::make_unique<Integer>(-Value);
+std::unique_ptr<numeric_> dice::operator-() {
+    return std::make_unique<integer>(-value);
 }
 
-std::unique_ptr<Numeric_> Dice::operator+(Numeric_ &n) {
-    if (auto *r = dynamic_cast<Integer *>(&n)) return trnc(dbl(Value) + dbl(r->Value));
-    if (auto *r = dynamic_cast<Float *>(&n)) return trnc(dbl(Value) + dbl(r->Value));
-    if (auto *r = dynamic_cast<Dice *>(&n)) return trnc(dbl(Value) + dbl(r->Value));
-    throw Exception("Type mismatch (%1% + %2%)", Type(), n.Type());
+std::unique_ptr<numeric_> dice::operator+(numeric_ &n) {
+    if (auto *r = dynamic_cast<integer *>(&n)) return truncate_(double_(value) + double_(r->value));
+    if (auto *r = dynamic_cast<floating *>(&n)) return truncate_(double_(value) + double_(r->values));
+    if (auto *r = dynamic_cast<dice *>(&n)) return truncate_(double_(value) + double_(r->value));
+    throw exception("type mismatch (%1% + %2%)", type(), n.type());
 }
 
-std::unique_ptr<Numeric_> Dice::operator-(Numeric_ &n) {
-    if (auto *r = dynamic_cast<Integer *>(&n)) return trnc(dbl(Value) - dbl(r->Value));
-    if (auto *r = dynamic_cast<Float *>(&n)) return trnc(dbl(Value) - dbl(r->Value));
-    if (auto *r = dynamic_cast<Dice *>(&n)) return trnc(dbl(Value) - dbl(r->Value));
-    throw Exception("Type mismatch (%1% - %2%)", Type(), n.Type());
+std::unique_ptr<numeric_> dice::operator-(numeric_ &n) {
+    if (auto *r = dynamic_cast<integer *>(&n)) return truncate_(double_(value) - double_(r->value));
+    if (auto *r = dynamic_cast<floating *>(&n)) return truncate_(double_(value) - double_(r->values));
+    if (auto *r = dynamic_cast<dice *>(&n)) return truncate_(double_(value) - double_(r->value));
+    throw exception("type mismatch (%1% - %2%)", type(), n.type());
 }
 
-std::unique_ptr<Numeric_> Dice::operator*(Numeric_ &n) {
-    if (auto *r = dynamic_cast<Integer *>(&n)) return trnc(dbl(Value) * dbl(r->Value));
-    if (auto *r = dynamic_cast<Float *>(&n)) return trnc(dbl(Value) * dbl(r->Value));
-    if (auto *r = dynamic_cast<Dice *>(&n)) return trnc(dbl(Value) * dbl(r->Value));
-    throw Exception("Type mismatch (%1% * %2%)", Type(), n.Type());
+std::unique_ptr<numeric_> dice::operator*(numeric_ &n) {
+    if (auto *r = dynamic_cast<integer *>(&n)) return truncate_(double_(value) * double_(r->value));
+    if (auto *r = dynamic_cast<floating *>(&n)) return truncate_(double_(value) * double_(r->values));
+    if (auto *r = dynamic_cast<dice *>(&n)) return truncate_(double_(value) * double_(r->value));
+    throw exception("type mismatch (%1% * %2%)", type(), n.type());
 }
 
-std::unique_ptr<Numeric_> Dice::operator/(Numeric_ &n) {
-    if (auto *r = dynamic_cast<Integer *>(&n)) {
-        if (r->Value == 0) throw Exception("Division by zero (%1% / %2%)", Inspect(), n.Inspect());
-        return trnc(dbl(Value) / dbl(r->Value));
+std::unique_ptr<numeric_> dice::operator/(numeric_ &n) {
+    if (auto *r = dynamic_cast<integer *>(&n)) {
+        if (r->value == 0) throw exception("division by zero (%1% / %2%)", inspect(), n.inspect());
+        return truncate_(double_(value) / double_(r->value));
     }
-    if (auto *r = dynamic_cast<Float *>(&n)) {
-        if (r->Value == 0) throw Exception("Division by zero (%1% / %2%)", Inspect(), n.Inspect());
-        return trnc(dbl(Value) / dbl(r->Value));
+    if (auto *r = dynamic_cast<floating *>(&n)) {
+        if (r->values == 0) throw exception("division by zero (%1% / %2%)", inspect(), n.inspect());
+        return truncate_(double_(value) / double_(r->values));
     }
-    if (auto *r = dynamic_cast<Dice *>(&n)) {
-        if (r->Value == 0) throw Exception("Division by zero (%1% / %2%)", Inspect(), n.Inspect());
-        return trnc(dbl(Value) / dbl(r->Value));
+    if (auto *r = dynamic_cast<dice *>(&n)) {
+        if (r->value == 0) throw exception("division by zero (%1% / %2%)", inspect(), n.inspect());
+        return truncate_(double_(value) / double_(r->value));
     }
-    throw Exception("Type mismatch (%1% / %2%)", Type(), n.Type());
+    throw exception("type mismatch (%1% / %2%)", type(), n.type());
 }
 
-std::ostream &operator<<(std::ostream &o, const Dice &d) {
+std::ostream &operator<<(std::ostream &o, const dice &d) {
     o << "[";
-    for (auto value = d.Values.begin(); value != d.Values.end(); ++value) {
-        o << *value << (value != d.Values.end() - 1 ? "," : "");
+    for (auto value = d.values.begin(); value != d.values.end(); ++value) {
+        o << *value << (value != d.values.end() - 1 ? "," : "");
     }
     o << "]";
-    return o << "(" << d.Value << ")";
+    return o << "(" << d.value << ")";
 }
 
-} // namespace OBJ
-} // namespace Blaze
+} // namespace obj
+} // namespace blaze

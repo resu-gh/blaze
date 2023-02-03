@@ -1,43 +1,43 @@
-#pragma once
+#pragma once // NOLINT(llvm-header-guard)
 #include "../ast/ast.hpp"
 #include "../except/except.hpp"
 #include "./precedence.hpp"
 #include <map>
 
-namespace Blaze {
+namespace blaze {
 
-class Parser final {
-    using prefixHookFn = std::unique_ptr<AST::Expr_> (Parser::*)();
-    using infixHookFn = std::unique_ptr<AST::Expr_> (Parser::*)(std::unique_ptr<AST::Expr_> &);
+class parser final {
+    using prefix_hook_fn = std::unique_ptr<ast::expr_> (parser::*)();
+    using infix_hook_fn = std::unique_ptr<ast::expr_> (parser::*)(std::unique_ptr<ast::expr_> &);
 
   private:
-    Lexer &lexer;
-    Token curToken;
-    Token peekToken;
-    std::map<TokenType, prefixHookFn> prefixHooks;
-    std::map<TokenType, infixHookFn> infixHooks;
-    std::map<TokenType, Precedence> precedences;
+    blaze::lexer &lexer;
+    tok::token cur_token;
+    tok::token peek_token;
+    std::map<tok::type, prefix_hook_fn> prefix_hooks;
+    std::map<tok::type, infix_hook_fn> infix_hooks;
+    std::map<tok::type, precedence> precedences;
 
-    void nextToken();
-    bool curTokenIs(TokenType);
-    bool peekTokenIs(TokenType);
-    bool expectPeek(TokenType);
-    Precedence curPrecedence();
-    Precedence peekPrecedence();
-    std::unique_ptr<AST::Event_> parseEvent();
-    std::unique_ptr<AST::Roll> parseRoll();
-    std::unique_ptr<AST::Expr_> parseExpr(Precedence);
-    std::unique_ptr<AST::Expr_> parseGroupedExpr();
-    std::unique_ptr<AST::Expr_> parseInfixExpr(std::unique_ptr<AST::Expr_> &);
-    std::unique_ptr<AST::Expr_> parsePrefixExpr();
-    std::unique_ptr<AST::Expr_> parseInteger();
-    std::unique_ptr<AST::Expr_> parseFloat();
-    std::unique_ptr<AST::Expr_> parseDice();
+    void next_token();
+    bool cur_token_is(tok::type);
+    bool peek_token_is(tok::type);
+    bool peek_token_expect(tok::type);
+    precedence cur_token_preced();
+    precedence peek_token_preced();
+    std::unique_ptr<ast::event_> parse_event();
+    std::unique_ptr<ast::roll> parse_roll();
+    std::unique_ptr<ast::expr_> parse_expr(precedence);
+    std::unique_ptr<ast::expr_> parse_expr_group();
+    std::unique_ptr<ast::expr_> parse_expr_infix(std::unique_ptr<ast::expr_> &);
+    std::unique_ptr<ast::expr_> parse_expr_prefix();
+    std::unique_ptr<ast::expr_> parse_integer();
+    std::unique_ptr<ast::expr_> parse_floating();
+    std::unique_ptr<ast::expr_> parse_dice();
 
   public:
-    explicit Parser(Lexer &);
+    explicit parser(blaze::lexer &);
 
-    std::unique_ptr<AST::Root> ParseRoot();
+    std::unique_ptr<ast::root> parse_root();
 };
 
-} // namespace Blaze
+} // namespace blaze

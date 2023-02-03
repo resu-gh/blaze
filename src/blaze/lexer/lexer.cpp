@@ -1,34 +1,34 @@
 #include "./lexer.hpp"
 
-namespace Blaze {
+namespace blaze {
 
-Lexer::Lexer(const std::string &i)
+lexer::lexer(const std::string &i)
     : input(i)
     , pos(0)
     , rpos(0)
     , curr(0)
     , blanks{' ', '\t', '\r', '\n'} {
-    readChar();
+    read_char();
 }
 
-void Lexer::readChar() {
+void lexer::read_char() {
     curr = rpos >= input.size() ? static_cast<char>(0) : input[rpos];
     pos = rpos;
     rpos++;
 }
 
-Token Lexer::NextToken() {
-    Token token;
-    skipBlanks();
+tok::token lexer::next_token() {
+    tok::token token;
+    skip_blanks();
     switch (curr) {
-    case '\0': token = make(TokenType::EOF_, ""); break;
-    case '+': token = make(TokenType::PLUS, "+"); break;
-    case '-': token = make(TokenType::MINUS, "-"); break;
-    case '*': token = make(TokenType::STAR, "*"); break;
-    case '/': token = make(TokenType::SLASH, "/"); break;
-    case '(': token = make(TokenType::LPAREN, "("); break;
-    case ')': token = make(TokenType::RPAREN, ")"); break;
-    case '^': token = make(TokenType::CARET, "^"); break;
+    case '\0': token = make(tok::type::EOF_, ""); break;
+    case '+': token = make(tok::type::PLUS, "+"); break;
+    case '-': token = make(tok::type::MINUS, "-"); break;
+    case '*': token = make(tok::type::STAR, "*"); break;
+    case '/': token = make(tok::type::SLASH, "/"); break;
+    case '(': token = make(tok::type::LPAREN, "("); break;
+    case ')': token = make(tok::type::RPAREN, ")"); break;
+    case '^': token = make(tok::type::CARET, "^"); break;
     case '0':
     case '1':
     case '2':
@@ -38,59 +38,59 @@ Token Lexer::NextToken() {
     case '6':
     case '7':
     case '8':
-    case '9': return makeDiceOrNumber(); break;
-    case 'd': return makeDice(); break;
-    default: token = make(TokenType::ILLEGAL_, std::string{curr}); break;
+    case '9': return make_dice_or_num(); break;
+    case 'd': return make_dice(); break;
+    default: token = make(tok::type::ILLEGAL_, std::string{curr}); break;
     }
-    readChar();
+    read_char();
     return token;
 }
 
-void Lexer::skipBlanks() {
-    while (find(blanks.begin(), blanks.end(), curr) != blanks.end()) readChar();
+void lexer::skip_blanks() {
+    while (find(blanks.begin(), blanks.end(), curr) != blanks.end()) read_char();
 }
 
-bool Lexer::isDigit(char c) {
+bool lexer::is_digit(char c) {
     return '0' <= c && c <= '9';
 }
 
-Token Lexer::make(TokenType t, const std::string &l) {
-    Token token;
-    token.Type = t;
-    token.Literal = l;
+tok::token lexer::make(tok::type t, const std::string &l) {
+    tok::token token;
+    token.type = t;
+    token.literal = l;
     return token;
 }
 
-Token Lexer::makeDice() {
+tok::token lexer::make_dice() {
     const uint64_t pre = pos;
-    readChar(); // skip `d`
-    if (!isDigit(curr)) return make(TokenType::ILLEGAL_, extractSubstr(pre, pos));
-    while (isDigit(curr)) readChar();
-    return make(TokenType::DICE, extractSubstr(pre, pos));
+    read_char(); // skip `d`
+    if (!is_digit(curr)) return make(tok::type::ILLEGAL_, extract_substr(pre, pos));
+    while (is_digit(curr)) read_char();
+    return make(tok::type::DICE, extract_substr(pre, pos));
 }
 
-Token Lexer::makeDiceOrNumber() {
+tok::token lexer::make_dice_or_num() {
     const uint64_t pre = pos;
-    while (isDigit(curr)) readChar();
+    while (is_digit(curr)) read_char();
     switch (curr) {
     case 'd':
-        readChar(); // skip `d`
-        if (!isDigit(curr)) return make(TokenType::ILLEGAL_, extractSubstr(pre, pos));
-        while (isDigit(curr)) readChar();
-        return make(TokenType::DICE, extractSubstr(pre, pos));
+        read_char(); // skip `d`
+        if (!is_digit(curr)) return make(tok::type::ILLEGAL_, extract_substr(pre, pos));
+        while (is_digit(curr)) read_char();
+        return make(tok::type::DICE, extract_substr(pre, pos));
         break;
     case '.':
-        readChar(); // skip `.`
-        if (!isDigit(curr)) return make(TokenType::ILLEGAL_, extractSubstr(pre, pos));
-        while (isDigit(curr)) readChar();
-        return make(TokenType::FLOAT, extractSubstr(pre, pos));
+        read_char(); // skip `.`
+        if (!is_digit(curr)) return make(tok::type::ILLEGAL_, extract_substr(pre, pos));
+        while (is_digit(curr)) read_char();
+        return make(tok::type::FLOAT, extract_substr(pre, pos));
         break;
-    default: return make(TokenType::INTEGER, extractSubstr(pre, pos)); break;
+    default: return make(tok::type::INTEGER, extract_substr(pre, pos)); break;
     }
 }
 
-std::string Lexer::extractSubstr(uint32_t li, uint32_t ri) {
+std::string lexer::extract_substr(uint32_t li, uint32_t ri) {
     return std::string(input.begin() + li, input.begin() + ri);
 }
 
-} // namespace Blaze
+} // namespace blaze

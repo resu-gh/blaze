@@ -1,10 +1,10 @@
-#pragma once
+#pragma once // NOLINT(llvm-header-guard)
 #include "./except.hpp"
 
-namespace Blaze {
+namespace blaze {
 
 template <typename... A>
-Exception::Exception(const std::string &f, A &&...a)
+exception::exception(const std::string &f, A &&...a)
     : reason(format(f, a...)) {}
 
-} // namespace Blaze
+} // namespace blaze

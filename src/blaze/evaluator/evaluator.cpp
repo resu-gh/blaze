@@ -2,99 +2,105 @@
 #include "../object/object.hpp"
 #include <memory>
 
-namespace Blaze {
+namespace blaze {
 
-Evaluator::Evaluator(Rand::Generator_ &g, std::ostream &o)
+evaluator::evaluator(rand::generator_ &g, std::ostream &o)
     : stream(&o)
     , generator(g) {}
 
-std::unique_ptr<OBJ::Numeric_> Evaluator::Eval(AST::Node_ &n, bool w) {
-    if (auto *nr = dynamic_cast<AST::Root *>(&n)) return Eval(*nr->Event, w);
-    if (auto *ne = dynamic_cast<AST::Roll *>(&n)) return Eval(*ne->Expr.get(), w);
-    if (auto *ni = dynamic_cast<AST::Integer *>(&n)) return evalInteger(*ni, w);
-    if (auto *nf = dynamic_cast<AST::Float *>(&n)) return evalFloat(*nf, w);
-    if (auto *nd = dynamic_cast<AST::Dice *>(&n)) return evalDice(*nd, w);
-    if (auto *npx = dynamic_cast<AST::Prefix *>(&n)) return evalPrefix(*npx, w);
-    if (auto *nix = dynamic_cast<AST::Infix *>(&n)) return evalInfix(*nix, w);
-    throw Exception("Unable to Evaluate (%1% %2%)", n.String(), n.TokenLiteral());
+// NOLINTNEXTLINE(misc-no-recursion)
+std::unique_ptr<obj::numeric_> evaluator::eval(ast::node_ &n, bool w) {
+    if (auto *nr = dynamic_cast<ast::root *>(&n)) return eval(*nr->event, w);
+    if (auto *ne = dynamic_cast<ast::roll *>(&n)) return eval(*ne->expr.get(), w);
+    if (auto *ni = dynamic_cast<ast::integer *>(&n)) return eval_integer(*ni, w);
+    if (auto *nf = dynamic_cast<ast::floating *>(&n)) return eval_floating(*nf, w);
+    if (auto *nd = dynamic_cast<ast::dice *>(&n)) return eval_dice(*nd, w);
+    if (auto *npx = dynamic_cast<ast::prefix *>(&n)) return eval_prefix(*npx, w);
+    if (auto *nix = dynamic_cast<ast::infix *>(&n)) return eval_infix(*nix, w);
+    throw exception("unable to evaluate (%1% %2%)", n.stringify(), n.token_lit());
 }
 
-std::unique_ptr<OBJ::Numeric_> Evaluator::evalInteger(AST::Integer &ni, bool w) {
-    auto oi = std::make_unique<OBJ::Integer>(ni.Value);
-    if (w) *stream << format((ni.expl ? "(%1%)" : "%1%"), oi->Inspect());
+std::unique_ptr<obj::numeric_> evaluator::eval_integer(ast::integer &ni, bool w) {
+    auto oi = std::make_unique<obj::integer>(ni.value);
+    if (w) *stream << format((ni.expl ? "(%1%)" : "%1%"), oi->inspect());
     return oi;
 }
 
-std::unique_ptr<OBJ::Numeric_> Evaluator::evalFloat(AST::Float &nf, bool w) {
-    auto of = std::make_unique<OBJ::Float>(nf.Value);
-    if (w) *stream << format((nf.expl ? "(%1%)" : "%1%"), of->Inspect());
+std::unique_ptr<obj::numeric_> evaluator::eval_floating(ast::floating &nf, bool w) {
+    auto of = std::make_unique<obj::floating>(nf.value);
+    if (w) *stream << format((nf.expl ? "(%1%)" : "%1%"), of->inspect());
     return of;
 }
 
-std::unique_ptr<OBJ::Numeric_> Evaluator::evalDice(AST::Dice &nd, bool w) {
-    auto od = std::make_unique<OBJ::Dice>(nd.nDices, generator, nd.nFaces);
+std::unique_ptr<obj::numeric_> evaluator::eval_dice(ast::dice &nd, bool w) {
+    auto od = std::make_unique<obj::dice>(nd.n_dices, generator, nd.n_faces);
     if (w) *stream << format((nd.expl ? "(%1%)" : "%1%"), *od);
     return od;
 }
 
-std::unique_ptr<OBJ::Numeric_> Evaluator::evalPrefix(AST::Prefix &npx, bool w) {
+// NOLINTNEXTLINE(misc-no-recursion)
+std::unique_ptr<obj::numeric_> evaluator::eval_prefix(ast::prefix &npx, bool w) {
     if (w && npx.expl) *stream << "(";
-    if (w) *stream << npx.TokenLiteral();
-    auto ro = Eval(*npx.Right, w);
+    if (w) *stream << npx.token_lit();
+    auto ro = eval(*npx.right, w);
     if (w && npx.expl) *stream << ")";
-    return solvePrefix(npx.Operator, *ro);
+    return solve_prefix(npx.oper, *ro);
 }
 
-std::unique_ptr<OBJ::Numeric_> Evaluator::solvePrefix(std::string &op, OBJ::Numeric_ &ro) {
+std::unique_ptr<obj::numeric_> evaluator::solve_prefix(std::string &op, obj::numeric_ &ro) {
     if (op == "-") return -ro;
     if (op == "+") return +ro;
-    throw Exception("(Prefix) Unknown operator (%1% %2%)", op, ro.Inspect());
+    throw exception("(prefix) unknown operator (%1% %2%)", op, ro.inspect());
 }
 
-std::unique_ptr<OBJ::Numeric_> Evaluator::evalInfix(AST::Infix &nix, bool w) {
-    if (nix.Operator == "^") return evalReps(nix);
-    return evalMath(nix, w);
+// NOLINTNEXTLINE(misc-no-recursion)
+std::unique_ptr<obj::numeric_> evaluator::eval_infix(ast::infix &nix, bool w) {
+    if (nix.oper == "^") return eval_infix_reps(nix);
+    return eval_infix_math(nix, w);
 }
 
-std::unique_ptr<OBJ::Numeric_> Evaluator::evalMath(AST::Infix &nix, bool w) {
+// NOLINTNEXTLINE(misc-no-recursion)
+std::unique_ptr<obj::numeric_> evaluator::eval_infix_math(ast::infix &nix, bool w) {
     if (w && nix.expl) *stream << "(";
-    auto lo = Eval(*nix.Left, w);
-    if (w) *stream << " " << nix.TokenLiteral() << " ";
-    auto ro = Eval(*nix.Right, w);
+    auto lo = eval(*nix.left, w);
+    if (w) *stream << " " << nix.token_lit() << " ";
+    auto ro = eval(*nix.right, w);
     if (w && nix.expl) *stream << ")";
-    return solveMath(nix.Operator, *lo, *ro);
+    return solve_infix_math(nix.oper, *lo, *ro);
 }
 
-std::unique_ptr<OBJ::Numeric_> Evaluator::solveMath(std::string &op, OBJ::Numeric_ &lo, OBJ::Numeric_ &ro) {
+std::unique_ptr<obj::numeric_> evaluator::solve_infix_math(std::string &op, obj::numeric_ &lo, obj::numeric_ &ro) {
     if (op == "+") return lo + ro;
     if (op == "-") return lo - ro;
     if (op == "*") return lo * ro;
     if (op == "/") return lo / ro;
-    throw Exception("(Infix) Unknown operator (%1% %2% %3%)", lo.Inspect(), op, ro.Inspect());
+    throw exception("(infix) unknown operator (%1% %2% %3%)", lo.inspect(), op, ro.inspect());
 }
 
-std::unique_ptr<OBJ::Numeric_> Evaluator::evalReps(AST::Infix &nix) {
-    auto ro = Eval(*nix.Right, false);
-    if (ro->Type() != OBJ::ObjectType::INTEGER) {
-        throw Exception("(Repetition) Right operand != Integer (... ^ %1%)", ro->Type());
+// NOLINTNEXTLINE(misc-no-recursion)
+std::unique_ptr<obj::numeric_> evaluator::eval_infix_reps(ast::infix &nix) {
+    auto ro = eval(*nix.right, false);
+    if (ro->type() != obj::type::INTEGER) {
+        throw exception("(repetition) right operand != integer (... ^ %1%)", ro->type());
     }
-    auto rv = dynamic_cast<OBJ::Integer &>(*ro).Value;
-    if (rv <= 0) throw Exception("(Repetition) Right operand <= 0 (... ^ %1%)", rv);
-    auto sq = solveReps(rv, *nix.Left);
+    auto rv = dynamic_cast<obj::integer &>(*ro).value;
+    if (rv <= 0) throw exception("(repetition) right operand <= 0 (... ^ %1%)", rv);
+    auto sq = solve_infix_reps(rv, *nix.left);
     return sq;
 }
 
-std::unique_ptr<OBJ::Numeric_> Evaluator::solveReps(int64_t rv, AST::Expr_ &ln) {
-    auto sq = std::make_unique<OBJ::Sequence>();
+// NOLINTNEXTLINE(misc-no-recursion)
+std::unique_ptr<obj::numeric_> evaluator::solve_infix_reps(int64_t rv, ast::expr_ &ln) {
+    auto sq = std::make_unique<obj::array>();
     for (auto i = 0; i < rv; ++i) {
-        auto lo = Eval(ln);
-        if (lo->Type() == OBJ::ObjectType::SEQUENCE) {
-            throw Exception("(Repetition) Left operand == Sequence (%1% ^ ...)", lo->Type());
+        auto lo = eval(ln);
+        if (lo->type() == obj::type::ARRAY) {
+            throw exception("(repetition) left operand == array (%1% ^ ...)", lo->type());
         }
-        *stream << " = " << lo->Inspect() << std::endl;
+        *stream << " = " << lo->inspect() << std::endl;
         *sq << lo;
     }
     return sq;
 }
 
-} // namespace Blaze
+} // namespace blaze

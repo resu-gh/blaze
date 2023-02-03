@@ -1,16 +1,16 @@
 #include "./precedence.hpp"
 
-namespace Blaze {
+namespace blaze {
 
-std::ostream &operator<<(std::ostream &o, const Precedence &p) {
+std::ostream &operator<<(std::ostream &o, const precedence &p) {
     switch (p) {
-    case Precedence::LOWEST: o << "Precedence::LOWEST"; break;
-    case Precedence::SUM: o << "Precedence::SUM"; break;
-    case Precedence::PRODUCT: o << "Precedence::PRODUCT"; break;
-    case Precedence::REPEAT: o << "Precedence::REPEAT"; break;
-    case Precedence::PREFIX: o << "Precedence::PREFIX"; break;
+    case precedence::LOWEST: o << "blaze::precedence::LOWEST"; break;
+    case precedence::SUM: o << "blaze::precedence::SUM"; break;
+    case precedence::PRODUCT: o << "blaze::precedence::PRODUCT"; break;
+    case precedence::REPEAT: o << "blaze::precedence::REPEAT"; break;
+    case precedence::PREFIX: o << "blaze::precedence::PREFIX"; break;
     }
     return o;
 }
 
-} // namespace Blaze
+} // namespace blaze

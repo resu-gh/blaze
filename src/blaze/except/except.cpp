@@ -1,9 +1,9 @@
 #include "./except.hpp"
 
-namespace Blaze {
+namespace blaze {
 
-const char *Exception::what() const throw() {
+const char *exception::what() const throw() {
     return reason.c_str();
 }
 
-} // namespace Blaze
+} // namespace blaze

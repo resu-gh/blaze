@@ -22,8 +22,9 @@ int main(int argc, char **argv) {
         return 0;
     }
     try {
-        Blaze::Compiler{argv[1]};
-    } catch (Blaze::Exception &e) {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        blaze::compiler{argv[1]};
+    } catch (blaze::exception &e) {
         std::cerr << e.what() << std::endl;
         return -1;
     };

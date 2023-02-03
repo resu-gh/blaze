@@ -1,31 +1,31 @@
 #include "./compiler.hpp"
 
-namespace Blaze {
+namespace blaze {
 
-Compiler::Compiler(const std::string &s) {
-    Rand::CSPRNG r = Rand::CSPRNG();
-    Lexer l = Lexer(s);
-    Parser p = Parser(l);
-    std::unique_ptr<AST::Root> a;
+compiler::compiler(const std::string &s) {
+    rand::csprng r = rand::csprng();
+    lexer l = lexer(s);
+    parser p = parser(l);
+    std::unique_ptr<ast::root> a;
     try {
-        a = p.ParseRoot();
-    } catch (Exception &px) {
+        a = p.parse_root();
+    } catch (blaze::exception &px) {
         throw px;
     }
-    std::cout << a->String() << std::endl << std::endl;
-    Evaluator e = Evaluator(r, std::cout);
-    std::unique_ptr<OBJ::Numeric_> o;
+    std::cout << a->stringify() << std::endl << std::endl;
+    evaluator e = evaluator(r, std::cout);
+    std::unique_ptr<obj::numeric_> o;
     try {
-        o = e.Eval(*a);
-    } catch (Exception &ax) {
+        o = e.eval(*a);
+    } catch (blaze::exception &ax) {
         throw ax;
     }
-    if (o->Type() == OBJ::ObjectType::SEQUENCE) {
+    if (o->type() == obj::type::ARRAY) {
         std::cout << std::endl << "** ";
     } else {
         std::cout << " = ** ";
     }
-    std::cout << o->Inspect() << " **" << std::endl;
+    std::cout << o->inspect() << " **" << std::endl;
 }
 
-} // namespace Blaze
+} // namespace blaze
