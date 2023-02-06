@@ -1,4 +1,4 @@
-#pragma once // NOLINT(llvm-header-guard)
+#pragma once
 #include "./format.hpp"
 
 namespace blaze {

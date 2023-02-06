@@ -5,7 +5,7 @@
 #include <glog/logging.h>
 
 void glogPrefix(std::ostream &s, const google::LogMessageInfo &l, void *) {
-    s << l.severity[0] << " "; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    s << l.severity[0] << " ";
     s << l.time.hour() << ":";
     s << l.time.min() << ":";
     s << l.time.sec() << " ";
@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     ::testing::InitGoogleTest(&argc, argv);
     fLB::FLAGS_logtostderr = 1;
     fLB::FLAGS_colorlogtostderr = 1;
-    ::google::InitGoogleLogging(argv[0], &glogPrefix); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    ::google::InitGoogleLogging(argv[0], &glogPrefix);
     LOG(INFO) << "running tests\n";
     auto r = RUN_ALL_TESTS();
     r ? LOG(ERROR) << "failed" << std::endl : LOG(INFO) << "success" << std::endl;

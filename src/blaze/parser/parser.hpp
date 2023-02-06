@@ -1,4 +1,4 @@
-#pragma once // NOLINT(llvm-header-guard)
+#pragma once
 #include "../ast/ast.hpp"
 #include "../except/except.hpp"
 #include "./precedence.hpp"

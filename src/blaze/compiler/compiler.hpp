@@ -1,4 +1,4 @@
-#pragma once // NOLINT(llvm-header-guard)
+#pragma once
 #include "../evaluator/evaluator.hpp"
 #include "../lexer/lexer.hpp"
 #include "../parser/parser.hpp"

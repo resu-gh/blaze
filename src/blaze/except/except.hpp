@@ -1,4 +1,4 @@
-#pragma once // NOLINT(llvm-header-guard)
+#pragma once
 #include "../meta/format.hpp"
 #include <exception>
 

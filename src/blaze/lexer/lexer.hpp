@@ -1,4 +1,4 @@
-#pragma once // NOLINT(llvm-header-guard)
+#pragma once
 #include "./token.hpp"
 #include <algorithm>
 #include <vector>

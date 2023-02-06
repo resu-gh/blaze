@@ -1,4 +1,4 @@
-#pragma once // NOLINT(llvm-header-guard)
+#pragma once
 #include "../except/except.hpp"
 #include "../random/random.hpp"
 #include <memory>
@@ -51,7 +51,7 @@ class numeric_ : public object_ {
 
 class integer final : public numeric_ {
   public:
-    int64_t value; // NOLINT(misc-non-private-member-variables-in-classes)
+    int64_t value;
     integer();
     explicit integer(int64_t);
     obj::type type() override;
@@ -66,7 +66,7 @@ class integer final : public numeric_ {
 
 class floating final : public numeric_ {
   public:
-    double values; // NOLINT(misc-non-private-member-variables-in-classes)
+    double values;
     floating();
     explicit floating(double);
     obj::type type() override;
@@ -81,8 +81,8 @@ class floating final : public numeric_ {
 
 class dice final : public numeric_ {
   public:
-    uint64_t value;               // NOLINT(misc-non-private-member-variables-in-classes)
-    std::vector<uint64_t> values; // NOLINT(misc-non-private-member-variables-in-classes)
+    uint64_t value;
+    std::vector<uint64_t> values;
     explicit dice(uint64_t, rand::generator_ &, uint64_t);
     obj::type type() override;
     std::string inspect() override;
@@ -98,8 +98,8 @@ std::ostream &operator<<(std::ostream &, const dice &);
 
 class array final : public numeric_ {
   public:
-    std::unique_ptr<numeric_> value;               // NOLINT(misc-non-private-member-variables-in-classes)
-    std::vector<std::unique_ptr<numeric_>> values; // NOLINT(misc-non-private-member-variables-in-classes)
+    std::unique_ptr<numeric_> value;
+    std::vector<std::unique_ptr<numeric_>> values;
     array();
     obj::type type() override;
     std::string inspect() override;

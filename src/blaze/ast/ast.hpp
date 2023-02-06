@@ -1,4 +1,4 @@
-#pragma once // NOLINT(llvm-header-guard)
+#pragma once
 #include "../lexer/lexer.hpp"
 #include <memory>
 #include <sstream>
@@ -36,14 +36,14 @@ class expr_ : public node_ {
     expr_(expr_ &&) = delete;
     expr_ &operator=(const expr_ &) = default;
     expr_ &operator=(expr_ &&) = delete;
-    bool expl = false; // NOLINT(misc-non-private-member-variables-in-classes)
+    bool expl = false;
     ~expr_() override = default;
     virtual void _expr() const = 0;
 };
 
 class root final : public node_ {
   public:
-    std::unique_ptr<event_> event; // NOLINT(misc-non-private-member-variables-in-classes)
+    std::unique_ptr<event_> event;
     root();
     std::string token_lit() const override;
     std::string stringify() const override;
@@ -51,8 +51,8 @@ class root final : public node_ {
 
 class roll final : public event_ {
   public:
-    tok::token token;            // NOLINT(misc-non-private-member-variables-in-classes)
-    std::unique_ptr<expr_> expr; // NOLINT(misc-non-private-member-variables-in-classes)
+    tok::token token;
+    std::unique_ptr<expr_> expr;
     roll();
     void _event() const override;
     std::string token_lit() const override;
@@ -61,9 +61,9 @@ class roll final : public event_ {
 
 class prefix final : public expr_ {
   public:
-    tok::token token;             // NOLINT(misc-non-private-member-variables-in-classes)
-    std::string oper;             // NOLINT(misc-non-private-member-variables-in-classes)
-    std::unique_ptr<expr_> right; // NOLINT(misc-non-private-member-variables-in-classes)
+    tok::token token;
+    std::string oper;
+    std::unique_ptr<expr_> right;
     prefix();
     void _expr() const override;
     std::string token_lit() const override;
@@ -72,10 +72,10 @@ class prefix final : public expr_ {
 
 class infix final : public expr_ {
   public:
-    tok::token token;             // NOLINT(misc-non-private-member-variables-in-classes)
-    std::string oper;             // NOLINT(misc-non-private-member-variables-in-classes)
-    std::unique_ptr<expr_> left;  // NOLINT(misc-non-private-member-variables-in-classes)
-    std::unique_ptr<expr_> right; // NOLINT(misc-non-private-member-variables-in-classes)
+    tok::token token;
+    std::string oper;
+    std::unique_ptr<expr_> left;
+    std::unique_ptr<expr_> right;
     infix();
     void _expr() const override;
     std::string token_lit() const override;
@@ -84,8 +84,8 @@ class infix final : public expr_ {
 
 class integer final : public expr_ {
   public:
-    tok::token token; // NOLINT(misc-non-private-member-variables-in-classes)
-    int64_t value;    // NOLINT(misc-non-private-member-variables-in-classes)
+    tok::token token;
+    int64_t value;
     integer();
     void _expr() const override;
     std::string token_lit() const override;
@@ -94,8 +94,8 @@ class integer final : public expr_ {
 
 class floating final : public expr_ {
   public:
-    tok::token token; // NOLINT(misc-non-private-member-variables-in-classes)
-    double value;     // NOLINT(misc-non-private-member-variables-in-classes)
+    tok::token token;
+    double value;
     floating();
     void _expr() const override;
     std::string token_lit() const override;
@@ -104,9 +104,9 @@ class floating final : public expr_ {
 
 class dice final : public expr_ {
   public:
-    tok::token token; // NOLINT(misc-non-private-member-variables-in-classes)
-    uint64_t n_dices; // NOLINT(misc-non-private-member-variables-in-classes)
-    uint64_t n_faces; // NOLINT(misc-non-private-member-variables-in-classes)
+    tok::token token;
+    uint64_t n_dices;
+    uint64_t n_faces;
     dice();
     void _expr() const override;
     std::string token_lit() const override;

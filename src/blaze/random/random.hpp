@@ -1,4 +1,4 @@
-#pragma once // NOLINT(llvm-header-guard)
+#pragma once
 #include "../except/except.hpp"
 #include <openssl/rand.h>
 #include <random>

@@ -1,6 +1,4 @@
 #include "../blaze/compiler/compiler.hpp"
-#include <sstream>
-#include <unistd.h>
 
 const std::string help = "USAGE: blaze {EXPRESSION}\n\n"
                          "EXPRESSION: \n\n"
@@ -22,7 +20,6 @@ int main(int argc, char **argv) {
         return 0;
     }
     try {
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         blaze::compiler{argv[1]};
     } catch (blaze::exception &e) {
         std::cerr << e.what() << std::endl;
