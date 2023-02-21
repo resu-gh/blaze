@@ -1,30 +1,30 @@
-from alpine:latest
+FROM alpine:latest
 
-run apk update
+RUN apk update
 
-run apk add build-base
-run apk add pkgconfig
-run apk add openssl-dev
-run apk add gtest-dev
-run apk add glog-dev
-run apk add boost-dev
+RUN apk add build-base
+RUN apk add pkgconfig
+RUN apk add openssl-dev
+RUN apk add gtest-dev
+RUN apk add glog-dev
+RUN apk add boost-dev
 
-copy . /blaze
+COPY . /blaze
 
-# run apk add cmake
+# RUN apk add cmake
 #
-# workdir /blaze/build
-# run cmake .. -DCMAKE_BUILD_TYPE=RELEASE -D_BLAZE_CLI=ON -D_BLAZE_TEST=ON
-# run make -j all test install
+# WORKDIR /blaze/build
+# RUN cmake .. -DCMAKE_BUILD_TYPE=RELEASE -D_BLAZE_CLI=ON -D_BLAZE_TEST=ON
+# RUN make -j all test install
 
-run apk add meson
+RUN apk add meson
 
-workdir /blaze
-run meson setup build --buildtype=release
+WORKDIR /blaze
+RUN meson setup build --buildtype=release
 
-workdir /blaze/build
-run meson compile
-run meson test
-run meson install
+WORKDIR /blaze/build
+RUN meson compile
+RUN meson test
+RUN meson install
 
-entrypoint ["blaze"]
+ENTRYPOINT ["blaze"]

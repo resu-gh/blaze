@@ -19,9 +19,9 @@ int main(int argc, char *argv[]) {
     fLB::FLAGS_logtostderr = 1;
     fLB::FLAGS_colorlogtostderr = 1;
     ::google::InitGoogleLogging(argv[0], &glogPrefix);
-    LOG(INFO) << "running tests\n";
+    LOG(INFO) << "Running tests\n";
     auto r = RUN_ALL_TESTS();
-    r ? LOG(ERROR) << "failed" << std::endl : LOG(INFO) << "success" << std::endl;
+    r ? LOG(ERROR) << "Failed\n" : LOG(INFO) << "Success\n";
     return 0;
 }
 
@@ -54,10 +54,10 @@ TEST(EvaluatorTest, expr) {
         blaze::evaluator e(g, s);
         auto o = e.eval(*a);
         // test: obj::object must be != nullptr
-        ASSERT_NE(o, nullptr);
+        ASSERT_NE(o, nullptr) << "Failed on `" << test.input << "`\n";
         // expectations
-        EXPECT_EQ(o->type(), test.expected_type);
-        EXPECT_EQ(o->inspect(), test.expected_value);
+        EXPECT_EQ(o->type(), test.expected_type) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(o->inspect(), test.expected_value) << "Failed on `" << test.input << "`\n";
     }
 }
 
@@ -91,10 +91,10 @@ TEST(EvaluatorTest, exprWithDices) {
         blaze::evaluator e(g, s);
         auto o = e.eval(*a);
         // test: obj::object must be != nullptr
-        ASSERT_NE(o, nullptr);
+        ASSERT_NE(o, nullptr) << "Failed on `" << test.input << "`\n";
         // expectations
-        EXPECT_EQ(o->type(), test.expected_type);
-        EXPECT_EQ(o->inspect(), test.expected_value);
+        EXPECT_EQ(o->type(), test.expected_type) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(o->inspect(), test.expected_value) << "Failed on `" << test.input << "`\n";
     }
 }
 
@@ -140,9 +140,9 @@ TEST(EvaluatorTest, print) {
         blaze::evaluator e(g, s);
         auto o = e.eval(*a);
         // test: obj::object must be != nullptr
-        ASSERT_NE(o, nullptr);
+        ASSERT_NE(o, nullptr) << "Failed on `" << test.input << "`\n";
         // expectations
         const std::string r = s.str() + " = " + o->inspect();
-        EXPECT_EQ(r, test.expected_string);
+        EXPECT_EQ(r, test.expected_string) << "Failed on `" << test.input << "`\n";
     }
 }

@@ -19,9 +19,9 @@ int main(int argc, char *argv[]) {
     fLB::FLAGS_logtostderr = 1;
     fLB::FLAGS_colorlogtostderr = 1;
     ::google::InitGoogleLogging(argv[0], &glogPrefix);
-    LOG(INFO) << "running tests\n";
+    LOG(INFO) << "Running tests\n";
     auto r = RUN_ALL_TESTS();
-    r ? LOG(ERROR) << "failed" << std::endl : LOG(INFO) << "success" << std::endl;
+    r ? LOG(ERROR) << "Failed\n" : LOG(INFO) << "Success\n";
     return 0;
 }
 
@@ -49,16 +49,16 @@ TEST(ParserTest, integer) {
         auto root = parser.parse_root();
         // test: (cast) the produced event_ must be an roll
         auto *roll = dynamic_cast<blaze::ast::roll *>(root->event.get());
-        ASSERT_NE(roll, nullptr);
+        ASSERT_NE(roll, nullptr) << "Failed on `" << test.input << "`\n";
         // test: (cast) the produced roll.expr must be an expr_
         auto *expr = dynamic_cast<blaze::ast::expr_ *>(roll->expr.get());
-        ASSERT_NE(expr, nullptr);
+        ASSERT_NE(expr, nullptr) << "Failed on `" << test.input << "`\n";
         // test: (cast) the produced expr_ must be an integer
         auto *intl = dynamic_cast<blaze::ast::integer *>(expr);
-        ASSERT_NE(intl, nullptr);
+        ASSERT_NE(intl, nullptr) << "Failed on `" << test.input << "`\n";
         // expectations
-        EXPECT_EQ(intl->token.type, blaze::tok::type::INTEGER);
-        EXPECT_EQ(intl->value, test.expected_value);
+        EXPECT_EQ(intl->token.type, blaze::tok::type::INTEGER) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(intl->value, test.expected_value) << "Failed on `" << test.input << "`\n";
     }
 }
 
@@ -86,16 +86,16 @@ TEST(ParserTest, float) {
         auto root = parser.parse_root();
         // test: (cast) the produced event_ must be an roll
         auto *roll = dynamic_cast<blaze::ast::roll *>(root->event.get());
-        ASSERT_NE(roll, nullptr);
+        ASSERT_NE(roll, nullptr) << "Failed on `" << test.input << "`\n";
         // test: (cast) the produced roll.expr must be an expr_
         auto *expr = dynamic_cast<blaze::ast::expr_ *>(roll->expr.get());
-        ASSERT_NE(expr, nullptr);
+        ASSERT_NE(expr, nullptr) << "Failed on `" << test.input << "`\n";
         // test: (cast) the produced expr_ must be an float
         auto *fltl = dynamic_cast<blaze::ast::floating *>(expr);
-        ASSERT_NE(fltl, nullptr);
+        ASSERT_NE(fltl, nullptr) << "Failed on `" << test.input << "`\n";
         // expectations
-        EXPECT_EQ(fltl->token.type, blaze::tok::type::FLOAT);
-        EXPECT_EQ(fltl->value, test.expected_value);
+        EXPECT_EQ(fltl->token.type, blaze::tok::type::FLOAT) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(fltl->value, test.expected_value) << "Failed on `" << test.input << "`\n";
     }
 }
 
@@ -123,18 +123,18 @@ TEST(ParserTest, dice) {
         auto root = parser.parse_root();
         // test: (cast) the produced event_ must be an roll
         auto *roll = dynamic_cast<blaze::ast::roll *>(root->event.get());
-        ASSERT_NE(roll, nullptr);
+        ASSERT_NE(roll, nullptr) << "Failed on `" << test.input << "`\n";
         // test: (cast) the produced roll.expr must be an expr_
         auto *expr = dynamic_cast<blaze::ast::expr_ *>(roll->expr.get());
-        ASSERT_NE(expr, nullptr);
+        ASSERT_NE(expr, nullptr) << "Failed on `" << test.input << "`\n";
         // test: (cast) the produced expr_ must be an dice
         auto *dicel = dynamic_cast<blaze::ast::dice *>(expr);
-        ASSERT_NE(dicel, nullptr);
+        ASSERT_NE(dicel, nullptr) << "Failed on `" << test.input << "`\n";
         // expectations
-        EXPECT_EQ(dicel->token.type, blaze::tok::type::DICE);
-        EXPECT_EQ(dicel->n_dices, test.expected_n_dices);
-        EXPECT_EQ(dicel->n_faces, test.expected_n_faces);
-        EXPECT_EQ(dicel->token.literal, test.expected_token_lit);
+        EXPECT_EQ(dicel->token.type, blaze::tok::type::DICE) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(dicel->n_dices, test.expected_n_dices) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(dicel->n_faces, test.expected_n_faces) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(dicel->token.literal, test.expected_token_lit) << "Failed on `" << test.input << "`\n";
     }
 }
 
@@ -160,21 +160,22 @@ TEST(ParserTest, prefixInteger) {
         auto root = parser.parse_root();
         // test: (cast) the produced event_ must be an roll
         auto *roll = dynamic_cast<blaze::ast::roll *>(root->event.get());
-        ASSERT_NE(roll, nullptr);
+        ASSERT_NE(roll, nullptr) << "Failed on `" << test.input << "`\n";
         // test: (cast) the produced roll.expr must be an expr_
         auto *expr = dynamic_cast<blaze::ast::expr_ *>(roll->expr.get());
-        ASSERT_NE(expr, nullptr);
+        ASSERT_NE(expr, nullptr) << "Failed on `" << test.input << "`\n";
         // test: (cast) the produced expr_ must be an prefix
         auto *prefix = dynamic_cast<blaze::ast::prefix *>(expr);
-        ASSERT_NE(prefix, nullptr);
+        ASSERT_NE(prefix, nullptr) << "Failed on `" << test.input << "`\n";
         // test: (cast) the produced prefix.right must be an integer
         auto *right = dynamic_cast<blaze::ast::integer *>(prefix->right.get());
-        ASSERT_NE(right, nullptr);
+        ASSERT_NE(right, nullptr) << "Failed on `" << test.input << "`\n";
         // expectations
-        EXPECT_EQ(prefix->token.type, test.expected_oper_type);
-        EXPECT_EQ(prefix->oper, test.expected_oper);
-        EXPECT_EQ(right->value, test.expected_value);
-        EXPECT_EQ(prefix->token.literal + right->token.literal, test.expected_token_lit);
+        EXPECT_EQ(prefix->token.type, test.expected_oper_type) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(prefix->oper, test.expected_oper) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(right->value, test.expected_value) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(prefix->token.literal + right->token.literal, test.expected_token_lit)
+            << "Failed on `" << test.input << "`\n";
     }
 }
 
@@ -200,21 +201,22 @@ TEST(ParserTest, prefixFloat) {
         auto root = parser.parse_root();
         // test: (cast) the produced event_ must be an roll
         auto *roll = dynamic_cast<blaze::ast::roll *>(root->event.get());
-        ASSERT_NE(roll, nullptr);
+        ASSERT_NE(roll, nullptr) << "Failed on `" << test.input << "`\n";
         // test: (cast) the produced roll.expr must be an expr_
         auto *expr = dynamic_cast<blaze::ast::expr_ *>(roll->expr.get());
-        ASSERT_NE(expr, nullptr);
+        ASSERT_NE(expr, nullptr) << "Failed on `" << test.input << "`\n";
         // test: (cast) the produced expr_ must be an prefix
         auto *prefix = dynamic_cast<blaze::ast::prefix *>(expr);
-        ASSERT_NE(prefix, nullptr);
+        ASSERT_NE(prefix, nullptr) << "Failed on `" << test.input << "`\n";
         // test: (cast) the produced prefix.right must be an float
         auto *right = dynamic_cast<blaze::ast::floating *>(prefix->right.get());
-        ASSERT_NE(right, nullptr);
+        ASSERT_NE(right, nullptr) << "Failed on `" << test.input << "`\n";
         // expectations
-        EXPECT_EQ(prefix->token.type, test.expected_open_type);
-        EXPECT_EQ(prefix->oper, test.expected_oper);
-        EXPECT_EQ(right->value, test.expected_value);
-        EXPECT_EQ(prefix->token.literal + right->token.literal, test.expected_token_lit);
+        EXPECT_EQ(prefix->token.type, test.expected_open_type) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(prefix->oper, test.expected_oper) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(right->value, test.expected_value) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(prefix->token.literal + right->token.literal, test.expected_token_lit)
+            << "Failed on `" << test.input << "`\n";
     }
 }
 
@@ -241,21 +243,22 @@ TEST(ParserTest, prefixDice) {
         auto root = parser.parse_root();
         // test: (cast) the produced event_ must be an roll
         auto *roll = dynamic_cast<blaze::ast::roll *>(root->event.get());
-        ASSERT_NE(roll, nullptr);
+        ASSERT_NE(roll, nullptr) << "Failed on `" << test.input << "`\n";
         // test: (cast) the produced roll.expr must be an expr_
         auto *expr = dynamic_cast<blaze::ast::expr_ *>(roll->expr.get());
-        ASSERT_NE(expr, nullptr);
+        ASSERT_NE(expr, nullptr) << "Failed on `" << test.input << "`\n";
         // test: (cast) the produced expr_ must be an prefix
         auto *prefix = dynamic_cast<blaze::ast::prefix *>(expr);
-        ASSERT_NE(prefix, nullptr);
+        ASSERT_NE(prefix, nullptr) << "Failed on `" << test.input << "`\n";
         // test: (cast) the produced prefix.right must be an float
         auto *right = dynamic_cast<blaze::ast::dice *>(prefix->right.get());
-        ASSERT_NE(right, nullptr);
+        ASSERT_NE(right, nullptr) << "Failed on `" << test.input << "`\n";
         // expectations
-        EXPECT_EQ(prefix->token.type, test.expected_oper_type);
-        EXPECT_EQ(prefix->oper, test.expected_oper);
-        EXPECT_EQ(right->n_dices, test.expected_n_dices);
-        EXPECT_EQ(right->n_faces, test.expected_n_faces);
-        EXPECT_EQ(prefix->token.literal + right->token.literal, test.expected_token_lit);
+        EXPECT_EQ(prefix->token.type, test.expected_oper_type) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(prefix->oper, test.expected_oper) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(right->n_dices, test.expected_n_dices) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(right->n_faces, test.expected_n_faces) << "Failed on `" << test.input << "`\n";
+        EXPECT_EQ(prefix->token.literal + right->token.literal, test.expected_token_lit)
+            << "Failed on `" << test.input << "`\n";
     }
 }

@@ -18,9 +18,9 @@ int main(int argc, char *argv[]) {
     fLB::FLAGS_logtostderr = 1;
     fLB::FLAGS_colorlogtostderr = 1;
     ::google::InitGoogleLogging(argv[0], &glogPrefix);
-    LOG(INFO) << "running tests\n";
+    LOG(INFO) << "Running tests\n";
     auto r = RUN_ALL_TESTS();
-    r ? LOG(ERROR) << "failed" << std::endl : LOG(INFO) << "success" << std::endl;
+    r ? LOG(ERROR) << "Failed\n" : LOG(INFO) << "Success\n";
     return 0;
 }
 
@@ -41,8 +41,8 @@ TEST(LexerTest, diagnostics) {
     for (auto &test : tests) {
         const blaze::tok::token tok = lexer.next_token();
         // expectations
-        EXPECT_EQ(tok.type, test.expected_type);
-        EXPECT_EQ(tok.literal, test.expected_literal);
+        EXPECT_EQ(tok.type, test.expected_type) << "Failed on `" << test.expected_literal << "`\n";
+        EXPECT_EQ(tok.literal, test.expected_literal) << "Failed on `" << test.expected_literal << "`\n";
     }
 }
 
@@ -74,8 +74,8 @@ TEST(LexerTest, token) {
     for (auto &test : tests) {
         const blaze::tok::token tok = lexer.next_token();
         // expectations
-        EXPECT_EQ(tok.type, test.expected_type);
-        EXPECT_EQ(tok.literal, test.expected_literal);
+        EXPECT_EQ(tok.type, test.expected_type) << "Failed on `" << test.expected_literal << "`\n";
+        EXPECT_EQ(tok.literal, test.expected_literal) << "Failed on `" << test.expected_literal << "`\n";
     }
 }
 
@@ -125,8 +125,8 @@ TEST(LexerTest, dice) {
     for (auto &test : tests) {
         const blaze::tok::token tok = lexer.next_token();
         // expectations
-        EXPECT_EQ(tok.type, test.expected_type);
-        EXPECT_EQ(tok.literal, test.expected_literal);
+        EXPECT_EQ(tok.type, test.expected_type) << "Failed on `" << test.expected_literal << "`\n";
+        EXPECT_EQ(tok.literal, test.expected_literal) << "Failed on `" << test.expected_literal << "`\n";
     }
 }
 
@@ -157,8 +157,8 @@ TEST(LexerTest, interger) {
     for (auto &test : tests) {
         const blaze::tok::token tok = lexer.next_token();
         // expectations
-        EXPECT_EQ(tok.type, test.expected_type);
-        EXPECT_EQ(tok.literal, test.expected_literal);
+        EXPECT_EQ(tok.type, test.expected_type) << "Failed on `" << test.expected_literal << "`\n";
+        EXPECT_EQ(tok.literal, test.expected_literal) << "Failed on `" << test.expected_literal << "`\n";
     }
 }
 
@@ -199,8 +199,8 @@ TEST(LexerTest, float) {
     for (auto &test : tests) {
         const blaze::tok::token tok = lexer.next_token();
         // expectations
-        EXPECT_EQ(tok.type, test.expected_type);
-        EXPECT_EQ(tok.literal, test.expected_literal);
+        EXPECT_EQ(tok.type, test.expected_type) << "Failed on `" << test.expected_literal << "`\n";
+        EXPECT_EQ(tok.literal, test.expected_literal) << "Failed on `" << test.expected_literal << "`\n";
     }
 }
 
@@ -240,7 +240,7 @@ TEST(LexerTest, scan) {
     for (auto &test : tests) {
         const blaze::tok::token tok = lexer.next_token();
         // expectations
-        EXPECT_EQ(tok.type, test.expected_type);
-        EXPECT_EQ(tok.literal, test.expected_literal);
+        EXPECT_EQ(tok.type, test.expected_type) << "Failed on `" << test.expected_literal << "`\n";
+        EXPECT_EQ(tok.literal, test.expected_literal) << "Failed on `" << test.expected_literal << "`\n";
     }
 }
